@@ -1,0 +1,3641 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Simulasi TKA B.Inggris" />
+  <title>Simulasi TKA Bahasa Inggris SMA 2025 (Wajib)</title>
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-hover: #1d4ed8;
+      --primary-light: #dbeafe;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #cbd5e1;
+      --correct-bg: #dcfce7;
+      --correct-border: #16a34a;
+      --correct-text: #14532d;
+      --wrong-bg: #fee2e2;
+      --wrong-border: #dc2626;
+      --wrong-text: #7f1d1d;
+      --warn-bg: #fef3c7;
+      --warn-text: #92400e;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg);
+      color: var(--text);
+      padding-bottom: 80px;
+    }
+
+    /* TOPBAR */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: var(--primary);
+      color: #ffffff;
+      padding: 12px 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .topbar-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .brand-title {
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: 0.2px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .topbar-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .timer-pill {
+      background: rgba(255, 255, 255, 0.18);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-variant-numeric: tabular-nums;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .timer-pill.warn {
+      background: #f59e0b;
+      color: #fff;
+    }
+
+    .timer-pill.danger {
+      background: #dc2626;
+      color: #fff;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .progress-pill {
+      font-size: 0.85rem;
+      background: rgba(255, 255, 255, 0.14);
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    .btn-finish-top {
+      background: #10b981;
+      color: #ffffff;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-finish-top:hover {
+      background: #059669;
+    }
+
+    .btn-menu-top {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      padding: 6px 11px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 20px auto;
+      padding: 0 14px;
+    }
+
+    /* START SCREEN / LOBBY */
+    .lobby-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px 20px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+      border: 1px solid #e2e8f0;
+    }
+
+    .lobby-title {
+      margin: 0 0 6px 0;
+      font-size: 1.4rem;
+      color: var(--primary);
+    }
+
+    .lobby-sub {
+      margin: 0 0 20px 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .pkg-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    @media (min-width: 640px) {
+      .pkg-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .pkg-card {
+      border: 2px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      background: #ffffff;
+      position: relative;
+    }
+
+    .pkg-card:hover {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .pkg-card.selected {
+      border-color: var(--primary);
+      background: #eff6ff;
+      box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.15);
+    }
+
+    .pkg-badge {
+      display: inline-block;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+
+    .pkg-name {
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin: 0 0 6px 0;
+      color: var(--text);
+    }
+
+    .pkg-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.45;
+    }
+
+    .settings-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .settings-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .settings-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .settings-label {
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .time-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .time-btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1.5px solid #cbd5e1;
+      background: #fff;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .time-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .btn-start-exam {
+      width: 100%;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      padding: 15px;
+      border-radius: 12px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(30, 64, 175, 0.25);
+      transition: background 0.15s;
+    }
+
+    .btn-start-exam:hover {
+      background: var(--primary-hover);
+    }
+
+    /* QUESTION CARD */
+    .question-card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e2e8f0;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .q-badge {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    .q-diff-badge {
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .diff-mudah {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #86efac;
+    }
+
+    .diff-sedang {
+      background: #fef9c3;
+      color: #a16207;
+      border: 1px solid #fde047;
+    }
+
+    .diff-sulit {
+      background: #ffedd5;
+      color: #c2410c;
+      border: 1px solid #fdba74;
+    }
+
+    .diff-sulit-sekali {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fca5a5;
+    }
+
+    .q-type-tag {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #475569;
+      background: #f1f5f9;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .passage-box {
+      background: #f8fafc;
+      border-left: 4px solid var(--primary);
+      padding: 14px 16px;
+      border-radius: 8px;
+      font-size: 0.93rem;
+      line-height: 1.65;
+      margin-bottom: 16px;
+      white-space: pre-line;
+      max-height: 320px;
+      overflow-y: auto;
+      border-top: 1px solid #e2e8f0;
+      border-right: 1px solid #e2e8f0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .passage-title {
+      font-weight: 800;
+      font-size: 1rem;
+      margin-bottom: 6px;
+      color: var(--primary);
+      display: block;
+    }
+
+    .question-text {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 14px;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      padding: 12px 15px;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      background: #ffffff;
+      color: var(--text);
+      font-size: 0.94rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.45;
+      white-space: pre-line;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #eff6ff;
+    }
+
+    .option-btn.selected-pending {
+      border-color: var(--primary);
+      background: #dbeafe;
+      font-weight: 600;
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    .option-btn.correct {
+      background-color: var(--correct-bg);
+      border-color: var(--correct-border);
+      color: var(--correct-text);
+      font-weight: 600;
+    }
+
+    .option-btn.wrong {
+      background-color: var(--wrong-bg);
+      border-color: var(--wrong-border);
+      color: var(--wrong-text);
+    }
+
+    /* TF / Category Table */
+    .tf-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 0.92rem;
+    }
+
+    .tf-table th, .tf-table td {
+      border: 1px solid #cbd5e1;
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .tf-table th {
+      background: #eff6ff;
+      font-weight: 700;
+    }
+
+    .tf-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tf-btn {
+      padding: 7px 12px;
+      border: 2px solid #cbd5e1;
+      border-radius: 8px;
+      background: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.82rem;
+    }
+
+    .tf-btn.correct {
+      background: var(--correct-bg);
+      border-color: var(--correct-border);
+      color: var(--correct-text);
+    }
+
+    .tf-btn.wrong {
+      background: var(--wrong-bg);
+      border-color: var(--wrong-border);
+      color: var(--wrong-text);
+    }
+
+    .explanation-box {
+      display: none;
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .explanation-box.show-correct {
+      display: block;
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      color: #14532d;
+    }
+
+    .explanation-box.show-wrong {
+      display: block;
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      color: #7f1d1d;
+    }
+
+    .status-header {
+      font-weight: 800;
+      font-size: 0.98rem;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    /* RESULT SCREEN */
+    .result-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 28px 20px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
+      border: 1px solid #e2e8f0;
+      margin-bottom: 24px;
+    }
+
+    .score-circle {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e40af, #3b82f6);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 16px auto;
+      box-shadow: 0 8px 20px rgba(30, 64, 175, 0.3);
+    }
+
+    .score-num {
+      font-size: 2.6rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .score-label {
+      font-size: 0.8rem;
+      opacity: 0.9;
+      margin-top: 4px;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      max-width: 540px;
+      margin: 20px auto;
+    }
+
+    @media (min-width: 500px) {
+      .result-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .stat-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 12px;
+      border-radius: 10px;
+    }
+
+    .stat-val {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .stat-lbl {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .result-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: var(--text);
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .bottom-finish-bar {
+      background: var(--card);
+      border: 2px solid var(--primary);
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+      margin-top: 24px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand-title">
+      <span>Simulasi TKA Bahasa Inggris 2025</span>
+    </div>
+    <div class="topbar-controls hidden" id="exam-controls">
+      <div class="timer-pill" id="timer-display">⏱️ 45:00</div>
+      <div class="progress-pill" id="progress-display">Terjawab: 0 / 30</div>
+      <button class="btn-finish-top" onclick="finishExam(false)">Selesai & Lihat Skor</button>
+      <button class="btn-menu-top" onclick="backToLobby()">Ganti Paket</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <!-- LAYAR AWAL (LOBBY) -->
+  <div id="lobby-screen" class="lobby-card">
+    <h1 class="lobby-title">Pilih Paket Soal TKA Bahasa Inggris</h1>
+    <p class="lobby-sub">
+      Dilengkapi fitur <strong>Timer Waktu TKA Asli</strong>, <strong>Filter Tingkat Kesulitan (Mudah - Sulit Sekali)</strong>, <strong>Pembahasan Langsung Saat Diklik</strong>, dan <strong>Rekap Skor Nilai di Akhir Ujian</strong>.
+    </p>
+
+    <div class="pkg-grid" id="pkg-grid">
+      <div class="pkg-card selected" onclick="selectPackage('utama')" id="pkg-utama">
+        <span class="pkg-badge">Paket Utama • 25 Soal (PG, MCMA, Kategori)</span>
+        <h3 class="pkg-name">Soal TKA Bahasa Inggris SMA 2025 Wajib</h3>
+        <p class="pkg-desc">The Lion and the Mouse, Effective Study Techniques (Infographic), The False Lion King, The Great Barrier Reef, & Why Teenagers Should Learn to Manage Their Money.</p>
+      </div>
+
+      <div class="pkg-card" onclick="selectPackage('inten')" id="pkg-inten">
+        <span class="pkg-badge">Tryout Prosus INTEN • 30 Soal (PG, MCMA, Yes/No)</span>
+        <h3 class="pkg-name">Tryout TKA-1 Bahasa Inggris (Prosus INTEN)</h3>
+        <p class="pkg-desc">AI in the Workplace, Exploring Bali's Natural Wonders, Social Media & Teen Mental Health, Sports Club Internship, Plant Nutrients, Ecology & Polar Bears, Women's Suffrage, Chocolate Making, & Letter to Ms. Susanti.</p>
+      </div>
+
+      <div class="pkg-card" onclick="selectPackage('pilihan1')" id="pkg-pilihan1">
+        <span class="pkg-badge">Pilihan 1 • 30 Soal (PG, MCMA, YES/NO)</span>
+        <h3 class="pkg-name">Latihan TKA Bahasa Inggris (Wajib) - Pilihan 1</h3>
+        <p class="pkg-desc">Rooftop Gardens, Library Reading Challenge, Electric Bicycles, The Honeybee Dance, The Lost Violin, Coral Reefs, Marie Curie, Application Letter, School Start Times, & Compost Bin.</p>
+      </div>
+
+      <div class="pkg-card" onclick="selectPackage('pilihan2')" id="pkg-pilihan2">
+        <span class="pkg-badge">Pilihan 2 • 30 Soal (PG, MCMA, YES/NO)</span>
+        <h3 class="pkg-name">Latihan TKA Bahasa Inggris (Wajib) - Pilihan 2</h3>
+        <p class="pkg-desc">Plastic Bag Fee, Smart Science Fair, Language-Learning Apps, Sea Turtles, The Night Market, Bamboo, Raden Ajeng Kartini, National Museum Trip, Homework Debate, & How a Rainbow Forms.</p>
+      </div>
+
+      <div class="pkg-card" onclick="selectPackage('semua')" id="pkg-semua" style="grid-column: 1 / -1;">
+        <span class="pkg-badge">Tryout Akbar • 115 Soal Lengkap (PG, MCMA, Kategori/YES-NO)</span>
+        <h3 class="pkg-name">Gabungan Semua Paket Bahasa Inggris (Paket Utama, Prosus INTEN, Pilihan 1 & 2)</h3>
+        <p class="pkg-desc">Kerjakan seluruh 115 soal dari Paket Utama (25 soal), Prosus INTEN (30 soal), Pilihan 1 (30 soal), dan Pilihan 2 (30 soal) sekaligus dalam satu sesi simulasi penuh.</p>
+      </div>
+    </div>
+
+    <div class="settings-box">
+      <div class="settings-row">
+        <span class="settings-label">📝 Filter Bentuk Soal yang Ingin Dikerjakan:</span>
+        <div class="time-options" id="type-options">
+          <button class="time-btn active" onclick="setQuestionTypeFilter('all', this)">Semua Bentuk (PG + MCMA + Tabel)</button>
+          <button class="time-btn" onclick="setQuestionTypeFilter('mcq', this)">Pilihan Ganda (PG)</button>
+          <button class="time-btn" onclick="setQuestionTypeFilter('mcqk', this)">PG Kompleks / MCMA</button>
+          <button class="time-btn" onclick="setQuestionTypeFilter('tf', this)">Tabel Kategori / Yes-No</button>
+        </div>
+      </div>
+      <div class="settings-row">
+        <span class="settings-label">🎯 Filter Tingkat Kesulitan Soal:</span>
+        <div class="time-options" id="diff-options">
+          <button class="time-btn active" onclick="setDifficultyFilter('all', this)">Semua Tingkat</button>
+          <button class="time-btn" onclick="setDifficultyFilter('mudah', this)">🟢 Mudah</button>
+          <button class="time-btn" onclick="setDifficultyFilter('sedang', this)">🟡 Sedang</button>
+          <button class="time-btn" onclick="setDifficultyFilter('sulit', this)">🟠 Sulit</button>
+          <button class="time-btn" onclick="setDifficultyFilter('sulit-sekali', this)">🔴 Sulit Sekali</button>
+        </div>
+      </div>
+      <div class="settings-row">
+        <span class="settings-label">⏱️ Pengaturan Waktu Timer (Standar TKA):</span>
+        <div class="time-options" id="time-options">
+          <button class="time-btn" onclick="setDuration(30)">30 Menit</button>
+          <button class="time-btn active" onclick="setDuration(45)">45 Menit (Standar TKA)</button>
+          <button class="time-btn" onclick="setDuration(60)">60 Menit</button>
+          <button class="time-btn" onclick="setDuration(90)">90 Menit</button>
+          <button class="time-btn" onclick="setDuration(120)">120 Menit</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-start-exam" onclick="startExam()">🚀 Mulai Kerjakan Sekarang</button>
+  </div>
+
+  <!-- LAYAR HASIL AKHIR (SKOR MUNCUL DI AKHIR) -->
+  <div id="result-screen" class="result-card hidden">
+    <h2 style="margin:0; color:var(--primary);" id="result-title">🎉 Ujian Selesai!</h2>
+    <p style="color:var(--muted); margin:6px 0 0 0;" id="result-subtitle">Berikut adalah hasil evaluasi dan nilai akhir simulasi TKA Anda</p>
+
+    <div class="score-circle">
+      <div class="score-num" id="final-score-100">0</div>
+      <div class="score-label">NILAI AKHIR (0-100)</div>
+    </div>
+
+    <div style="font-weight:800; font-size:1.1rem; margin-bottom:6px;" id="predikat-text">Predikat: -</div>
+    <div style="font-size:0.9rem; color:var(--muted);" id="skor-tka-text">Skor Setara TKA: 0 / 1000</div>
+
+    <div class="result-grid">
+      <div class="stat-box">
+        <div class="stat-val" style="color:#16a34a;" id="stat-correct">0</div>
+        <div class="stat-lbl">Soal Benar</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" style="color:#dc2626;" id="stat-wrong">0</div>
+        <div class="stat-lbl">Soal Salah</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" style="color:#64748b;" id="stat-unanswered">0</div>
+        <div class="stat-lbl">Tidak Dijawab</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" style="color:#1e40af;" id="stat-time">00:00</div>
+        <div class="stat-lbl">Waktu Kerja</div>
+      </div>
+    </div>
+
+    <div class="result-actions">
+      <button class="btn-primary" onclick="scrollToReview()">📖 Lihat Detail Soal & Pembahasan</button>
+      <button class="btn-secondary" onclick="startExam()">🔄 Ulangi Paket Ini</button>
+      <button class="btn-secondary" onclick="backToLobby()">🏠 Pilih Paket Lain</button>
+    </div>
+  </div>
+
+  <!-- DAFTAR SOAL -->
+  <div id="quiz-screen" class="hidden">
+    <div id="quiz-list"></div>
+
+    <div class="bottom-finish-bar" id="bottom-finish-bar">
+      <h3 style="margin:0 0 8px 0;">Sudah selesai mengerjakan semua soal?</h3>
+      <p style="margin:0 0 16px 0; color:var(--muted); font-size:0.92rem;">Klik tombol di bawah ini untuk menghentikan timer dan melihat <strong>Skor Nilai Akhir</strong> Anda.</p>
+      <button class="btn-start-exam" style="max-width:360px;" onclick="finishExam(false)">🏆 Selesai & Tampilkan Skor Akhir</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ======================== DATA BACAAN (PASSAGES) ========================
+const passages = {
+  // --- PAKET UTAMA (TKA BAHASA INGGRIS SMA 2025 WAJIB) ---
+  lion_mouse: {
+    title: "The Lion and the Mouse",
+    text: `Once upon a time, in a thick jungle in Africa, there lived a strong and fierce lion. Every afternoon, the lion would rest under the cool shade of a big tree after walking through the forest.
+One day, while he was sleeping, a playful little mouse passed by. The mouse saw the lion's thick mane and was curious. He climbed up and began to jump around on the lion's head, playing in his mane.
+The lion woke up suddenly and was not happy at all. He quickly caught the mouse in his big paw and roared, "Who dares to wake me up?" He was very angry and almost killed the mouse.
+Scared and shaking, the mouse begged the lion, "Please don't kill me! I didn't mean to bother you. If you let me go, I promise I'll help you one day."
+The lion laughed loudly. "You? Help me? That's funny." But the lion was feeling kind, so he let the mouse go free.
+A few days later, the lion was walking through the jungle again when he fell into a trap. A net set by hunters caught him, and he couldn't escape. He tried to bite and tear the ropes, but they were too strong. The lion roared loudly, hoping someone would come.
+The mouse heard the roar and ran to help. He saw the lion trapped and quickly started to chew the ropes with his sharp teeth. After some time, the net broke, and the lion was free.
+The lion looked at the mouse with surprise and said, "Thank you! You really saved my life."
+The mouse smiled and said, "I told you I would help you one day."
+From that moment on, the lion and the mouse became close friends. The lion learned that even small creatures can do great things, and we all need help sometimes.`
+  },
+  study_tech: {
+    title: "Infographic: Effective Study Techniques",
+    text: `1. Know Your Learning Style: Understand whether you learn best by reading, listening, or watching.
+2. Set a Consistent Study Schedule: Study at the same time every day. Regularity helps build strong habits.
+3. Create a Comfortable Study Space: Find a quiet, well-lit, and distraction-free area. Have all your materials ready.
+4. Use the Pomodoro Technique: Study for 25 minutes, then take a 5-minute break. This keeps your mind fresh and focused.
+5. Take Effective Notes: Write key points using methods like mind maps or tables to help remember important information.
+6. Practice and Repeat: Regularly review your material and do practice-questions to deepen understanding and improve retention.
+7. Join a Study Group: Discuss topics with friends to gain new insights and solve problems together.
+8. Leverage Technology: Use apps and websites for flashcards, video lessons, and online quizzes to support your study routine.
+9. Get Enough Sleep: Aim for 7-8 hours.
+10. Be Patient and Persistent: Learning takes time.`
+  },
+  false_lion: {
+    title: "The False Lion King",
+    text: `Once upon a time, in Africa, there lived two lion kings. One was named Hera and the other was Shero. Hera was very strong and handsome. All the animals loved and respected him. He was a great leader. Shero was not like Hera. He had a small mane and a funny, squeaky voice. Shero liked to pretend he was as powerful as Hera. He often copied Hera's roar, but it made the other animals laugh.
+One day, the animals heard that some hyenas were causing trouble near the river. Hera quickly gathered his followers to stop the hyenas. Shero also wanted to come. He wanted to show everyone that he was strong too.
+When they reached the river, Hera roared loudly. His roar was so powerful that the hyenas got scared. Shero also tried to roar, but his voice was high and silly. The hyenas laughed at him. Their leader, Hank the Hyena, made jokes about Shero.
+Hera stayed calm and smiled. Shero did not give up. He said, "I am just as strong as Hera!" The hyenas laughed even louder. Shero tried to show his power by jumping on a small dirt hill. But he tripped and fell into the ground. The hyenas laughed so much they cried. Even Hera laughed a little.
+At the end of the day, the hyenas left, still laughing about Shero. Hera told Shero, "You are not like me, but you make everyone happy with your jokes." Shero smiled and understood that he had his own special gift.
+From that day, Shero became the kingdom's jester. He and Hera ruled together—one with strength, and one with laughter. The animals learned that both power and fun are important in life.`
+  },
+  barrier_reef: {
+    title: "The Great Barrier Reef",
+    text: `The Great Barrier Reef is one of the most beautiful places in the world. It is located in the Pacific Ocean, near the northeast coast of Australia. The reef is very big. It stretches over 2,000 kilometers and can even be seen from space. There are many small coral islands and clear, warm waters around the reef.
+This reef is full of life. There are many kinds of colorful fish, sea turtles, dolphins, and even sharks. Coral of different shapes and colors grows under the water. Sea birds fly over the reef and nest on small islands. People can see this beauty by swimming, diving, or joining a boat tour.
+The colors under the water are amazing. Coral comes in red, yellow, green, and blue. Some coral looks like trees, and some looks like big round stones. Small fish swim in and out of the coral like they are playing a game. In some places, soft coral moves with the water like grass in the wind. When the sun shines, the reef looks bright and full of light. It feels like a different world under the sea.
+The reef is not only beautiful, but also very important. It helps protect the coast from big waves and storms. It is a home for sea animals and a place where plants can grow. Many people also get food and jobs from the sea near the reef. Without the reef, the ocean would not be the same.`
+  },
+  manage_money: {
+    title: "Why Teenagers Should Learn to Manage Their Money",
+    text: `Many young people today often spend money on things they like, such as snacks, clothes, or fun activities. But learning to handle money from a young age is very important. Good money habits can help students make a better future.
+Having a clear plan for the future can show teenagers how to use their money. Students should think about short-term goals, like getting a new phone, and long-term goals, like saving for college or starting a business. Writing these goals down can help students stay motivated and focused.
+A budget helps students see where their money goes every month. It's important to list basic needs like food and travel, and also other costs like clothes or presents. A budget makes it easier to decide how much money to save, spend, or keep for unexpected problems.
+Sometimes, students don't know how much they spend on small things. Keeping track of spending with notes or apps can help students understand their habits. This helps them stay within their budget and make changes if needed.
+Teenagers should also learn the difference between saving money and investing money. Saving is safer but slower, while investing has more risk but can earn more money. Knowing both can help students choose the best way for their money goals.
+To sum up, students who learn to plan, budget, track, and understand saving choices are more ready for the future. That is why learning about money should start early and be done often.
+
+[Table 1. How do students manage their money?
+• Students who save regularly: 45% (Save at least 10% of allowance)
+• Students who track expenses: 35% (Use apps or notes)
+• Students with financial education: 25% (Have learned budgeting in class)
+• Students who often borrow from friends: 30% (Due to running out of money)
+• Students who spend most on food & drinks: 50% (Largest category of spending)
+• Students who plan monthly budgets: 28% (Usually better savers)]`
+  },
+
+  // --- PAKET 2 (TRYOUT TKA-1 PROSUS INTEN) ---
+  inten_ai: {
+    title: "AI in the Workplace (Text for No. 1)",
+    text: `AI is increasingly used in various areas of life, including the workplace. While some support this development, others express concern. Below are arguments for and against the use of AI at work.
+
+Supporters present three main points. First, efficiency and productivity. AI can handle repetitive, monotonous tasks without fatigue, allowing employees to focus on more complex and creative work. This increases output and saves time. Second, better decision-making. AI can analyze vast amounts of data quickly, identifying patterns and trends that help managers make informed, data-driven decisions. This leads to more accurate forecasts, improved employee engagement, and better overall results. Third, learning and development. AI can enhance employee engagement by offering personalized training. AI systems can detect skill gaps and recommend tailored programs, helping employees grow. This benefits both workers—by boosting confidence and capability—and companies—by fostering more skilled, loyal, and satisfied staff.
+
+Critics, however, raise several concerns. First, job displacement. As AI takes over tasks once handled by humans, there's growing fear of job loss, causing stress among workers. Second, lack of human touch. Despite its capabilities, AI cannot replicate the empathy, emotional intelligence, and connection offered by human leaders essential in many roles. Third, ethical and privacy issues. Concerns about data use require clear policies to ensure fairness, transparency, and respect for privacy, maintaining employee trust.
+
+Conclusion: AI should be used in the workplace, but with proper regulations to maximize benefits and minimize risks. A cautious, well-planned approach is essential for the future.`
+  },
+  inten_bali: {
+    title: "Exploring Bali's Natural Wonders (Text for No. 2 & 4)",
+    text: `Bali, a beautiful island in Indonesia, is known for its stunning landscapes and rich culture. While many come for the beaches and temples, the island also offers natural attractions that amaze nature lovers from around the world. From national parks and waterfalls to terraced rice fields, Bali is full of natural beauty.
+
+In the west lies West Bali National Park, a peaceful area filled with green forests, calm mangrove swamps, and colorful coral reefs along the sea. The air is fresh, and the scenery feels untouched. One of the park's most special sights is the Bali Starling, a rare white bird with bright blue around its eyes. Its soft song adds magic to the quiet forest. Visitors can walk along clear paths and enjoy the rich variety of plants and animals in this protected area.
+
+Heading north, travelers find the scenic Munduk Waterfall, surrounded by green hills and forests. Water flows gently over rocky cliffs into a cool clear pool. Mist rises into the air, mixing with the calming sound of falling water. The walk to the waterfall passes through narrow paths lined with coffee and clove trees. Their fresh scent fills the air, offering a pleasant and peaceful experience. Munduk is the perfect place to relax and enjoy Bali's natural charm.
+
+Near the cultural center Ubud, the famous Tegalalang rice terraces stretch across the hills in green steps. These terraces are shaped by generations of farmers who work the land by hand. In the morning, mist rises above the fields, and sunlight reflects off the water in the paddies. Farmers in wide-brimmed hats plant rice carefully, their feet sinking into the soft earth. Water flows gently through small canals, keeping the fields healthy and green. The quiet surroundings and slow rhythm of farm life create a peaceful and inspiring scene.
+
+These natural wonders highlight Bali's dedication in preserving its environmental and cultural treasures. By exploring these sites, tourists not only experience the island's scenic beauty but also support ongoing conservation efforts, helping to ensure that Bali's wonders last for future generations.`
+  },
+  inten_socmed: {
+    title: "Social Media Effects on Teen Mental Health (Text for No. 3 & 5)",
+    text: `In today's world, social media is a big part of many teenagers' daily lives. While it has some benefits, such as staying connected with friends, meeting new people, and learning about interesting topics, it also brings serious problems. I strongly believe that social media harms teen mental health, and we must pay more attention to this issue before it becomes even worse.
+
+First, social media often makes teenagers compare themselves to others in an unhealthy way. When teens see pictures of people who seem perfect, they feel that they are not good enough. These feelings can lower self-esteem and lead to sadness, anxiety, or even depression. The problem is that many of these online posts are edited, filtered, or fake, but teens still feel pressure to look or live the same way. They may think that their own life is boring or not successful, which is simply not true.
+
+Second, too much time on social media affects sleep and study habits. Many teenagers use their phones late at night, checking messages or watching videos, which reduces sleep time and quality. Without enough sleep, teens cannot focus well in class, and their grades may suffer. This can increase stress and worry about the future, making them feel overwhelmed.
+
+Finally, online bullying, or cyberbullying, is another serious danger. Unlike face-to-face bullying, it can happen at any time and be shared with many people. Victims of cyberbullying often feel alone, scared, and helpless, and in some cases, it leads to serious mental health problems.
+
+In conclusion, although social media has some good uses, its harm to teen mental health is much greater. Teenagers need support from parents, teachers, and society to use it wisely. Schools should teach students how to use social media in healthy ways, and parents should guide their children to take breaks and spend time offline. By doing this, we can help protect young people's mental health in this digital age.`
+  },
+  inten_intern: {
+    title: "My Experience as an Intern at a Sports Club (Text for No. 6 & 7)",
+    text: `Last summer, I had the opportunity to work as an intern at a local sports club. It was my first time working in a professional sports environment, and I was both nervous and excited. The internship went through a few phases, starting from orientation until finally jumping in to help during practices and games.
+
+On my first day, I met the head coach, who welcomed me and explained my tasks. I had to set up cones for drills, bring water for the players, and check the training schedules. The first few days were challenging because I was not used to the morning routine. Every morning I had to wake up early, arrive on time, and follow instructions carefully. I worried about making mistakes, but the coaches were kind and guided me.
+
+In the second month of my internship, I was trained to handle emergency situations. I got the chance to put that knowledge into practice when something unexpected happened. During football practice, a player fell and hurt his ankle. Everyone stopped, and I quickly ran to get the first aid kit. I helped the coach assess the injury and ensured the player stayed calm while we got him seated safely. Luckily, it wasn't serious, but the experience reinforced an important lesson: staying alert and prepared during emergencies can make a big difference.
+
+At the end of my internship, the coaches held an evaluation and reflection session where they shared the results of their feedback. They highlighted my strengths in teamwork, responsibility, and communication, and even gave me a club T-shirt as a gift. I felt proud because I had improved in these areas. It was a great experience, and I hope to work in a sports club again in the future.`
+  },
+  inten_plants: {
+    title: "Plant Elements and Soil Nutrients (Text 8 for No. 8 - 12)",
+    text: `In total, the plant has need of at least 16 elements, of which the most important are carbon, hydrogen, oxygen, nitrogen, phosphorus, sulfur, potassium, calcium, and magnesium.
+
+The plant obtains carbon and hydrogen dioxide from the atmosphere; other nutrients are taken up from the soil. Although the plant contains sodium, iodine, and cobalt, these are apparently not essential. This is also true of silicon and aluminum.
+
+Overall chemical analyses indicate that the total supply of nutrients in soils is usually high in comparison with the requirements of crop plants. Much of this potential supply, however, is bound tightly in forms that are not released to crops fast enough to give satisfactory growth. Because of this, the farmer is interested in measuring the available nutrient supply as contrasted to the total quantities.`
+  },
+  inten_ecology: {
+    title: "Polar Bears and Ecology (Text 9 for No. 13 - 17)",
+    text: `Polar bears are adapted to life in the polar region, around the North Pole. Their bodies have special features that work particularly well in the polar seas. For instance, they have sharp and powerful claws for catching their food, which is mainly seals. In their own environment, they are excellent hunters; but if they had to live on the birds and squirrels in other places, they would die.
+
+The science that studies the way that different forms of life are adapted to their particular environment is called ecology.
+
+The first lesson of ecology is that all life in an environment depends on other forms of life. Polar bears depend on seals, which can live only where they do because they depend on particular kinds of fish which are found in the Arctic seas.
+
+There are certain important cycles in nature that show plants and animals depend on each other: for example, the nitrogen cycles. Plants take nitrogen compounds from the soil and turn them into protein. Animals eat these proteins and return some of them to the soil as waste products and the rest when they die. Another cycle is the oxygen cycle. When we breathe, we take in oxygen, and give out carbon dioxide. Plants absorb it to make sugar compounds, and in the process oxygen is produced and released to the atmosphere.
+
+An ideal ecological system, living things exist in balance. However, particularly where man interferes, a species may become too successful and abundant, and the balance is destroyed. For instance, the use of pesticides to kill a particular plant pest may also kill predatory insects and even birds, and thus other pests are allowed to increase. Therefore, great care is needed in the use of pesticides.
+
+Through ecology we try to restore the balance in the ecological system, and thus save the world from devastation.`
+  },
+  inten_suffrage: {
+    title: "Women's Reform and Suffrage Movement in the US (Text 10 for No. 18 - 22)",
+    text: `During the nineteenth century, women in the United States organized and participated in a large number of reform movements, including movements to reorganize the prison system, improve education, ban the sale of alcohol, and most importantly, to free the slaves. Some women saw similarities in the social status of women and slaves. Women like Elizabeth Cady Stanton and Lucy Stone were feminists and abolitionists who supported the rights of both women and blacks. A number of male abolitionists, including William Lloyd Garrison and Wendell Philips, also supported the rights of women to speak and participate equally with men in antislavery activities. Probably more than any other movement, abolitionism offered women previously denied entry into politics. They became involved primarily in order to better their living conditions and the conditions of others.
+
+When the Civil War ended in 1865, the Fourteenth and Fifteenth Amendments to the Constitution adopted in 1868 and 1870 granted citizenship and suffrage to blacks but not to women. Discouraged but resolved, feminists influenced more and more women to demand the right to vote. In 1869, Wyoming Territory had yielded to demands by feminists, but eastern states resisted more stubbornly than before. A women's suffrage bill had been presented to every Congress since 1878, but it continually failed to pass until 1920, when the Nineteenth Amendment granted women the right to vote.`
+  },
+  inten_chocolate: {
+    title: "How Chocolate is Made (Text for No. 23 - 26)",
+    text: `Have you ever wondered how people get chocolate from? In this article we'll enter the amazing world of chocolate so you can understand exactly what you're eating.
+
+Chocolate starts with a tree called the cacao tree. This tree grows in equatorial regions, especially in places such as South America, Africa, and Indonesia. The cacao tree produces a fruit about the size of a small pineapple. Inside the fruit are the tree's seeds, also known as cocoa beans.
+
+The beans are fermented for about a week, dried in the sun and then shipped to the chocolate maker. The chocolate maker starts by roasting the beans to bring out the flavor. Different beans from different places have different qualities and flavor, so they are often sorted and blended to produce a distinctive mix. Next, the roasted beans are winnowed. Winnowing removes the meat nib of the cacao bean from its shell. Then, the nibs are blended. The blended nibs are ground to make it a liquid. The liquid is called chocolate liquor. It tastes bitter. All seeds contain some amount of fat, and cacao beans are not different. However, cacao beans are half fat, which is why the ground nibs form liquid. It's pure, bitter chocolate.`
+  },
+  inten_rayani: {
+    title: "Letter to Ms. Susanti (Text 11 for No. 27 - 30)",
+    text: `Dear Ms. Susanti,
+
+I hope this letter finds you in good health. I am writing to you today to express my concerns about the upcoming math exam.
+
+As you know, math has always been a challenging subject for me, and I have been struggling with it for some time now. I have been working hard to prepare for the exam, but I am still feeling unsure about my abilities.
+
+I am wondering if you could give me some extra help or guidance to prepare for the exam. Perhaps you could recommend some study materials or provide some additional practice problems for me to work on.
+
+I appreciate all the hard-work and effort you put into teaching us and I know you want us to succeed. Your guidance and support would mean a lot to me and I am grateful for any help you can provide.
+
+Thank you for your time and attention. I look forward to hearing from you soon.
+
+Sincerely,
+Rayani.`
+  }
+,
+
+  // --- LATIHAN TKA BAHASA INGGRIS (WAJIB) - PILIHAN 1 & 2 ---
+  p1_rooftop: {
+    title: "Rooftop Gardens",
+    text: `Rooftop gardens are becoming a common sight in crowded cities. By growing vegetables and flowers on the roofs of buildings, residents use space that would otherwise stay empty. Besides providing fresh food, the plants absorb heat, so the top floors of the building stay cooler in summer. Rainwater is also caught by the soil and the plants, which reduces the amount of water flowing into the streets during a storm. However, a rooftop garden needs a strong roof, a good drainage system, and regular care, so not every building is suitable.`
+  },
+
+  p1_library: {
+    title: "Library Reading Challenge",
+    text: `LIBRARY READING CHALLENGE
+Starting Monday, 3 November, Harapan High School Library invites all students to join the 30-Day Reading Challenge. Participants must read at least one book and write a short review of 100 words. Reviews should be submitted to the librarian, Ms. Rina, before 3 December.
+The three best reviews will be published on the school bulletin board, and the writers will receive book vouchers worth Rp200,000 each. Students who read books in English will get extra points. For more information, visit the library between 7 a.m. and 3 p.m.`
+  },
+
+  p1_ebikes: {
+    title: "Electric Bicycles in the City",
+    text: `Electric bicycles, or e-bikes, are gaining popularity among city workers. An e-bike has a small motor that helps the rider climb hills and travel long distances without getting too tired. In a survey of 500 office workers in one city, many said they chose e-bikes because parking is easy and fuel is not needed. Yet some people worry about safety. E-bikes are faster than ordinary bicycles, and riders who do not wear helmets can be seriously injured. For this reason, experts suggest that riders wear helmets, obey traffic rules, and keep their bikes in good condition.`
+  },
+
+  p1_honeybee: {
+    title: "The Honeybee Dance",
+    text: `Honeybees cannot speak, yet they can tell their friends exactly where to find food. When a worker bee discovers a good patch of flowers, she returns to the hive and performs a special movement known as the waggle dance.
+During the dance, the bee moves in a short straight line while shaking her body, then circles back and repeats the movement. The angle of the straight line shows the direction of the flowers in relation to the sun, and the length of the waggle shows how far away they are. The longer the waggle, the farther the food.
+Other bees gather around the dancer and follow her movements closely. After learning the message, they fly out to find the flowers. Scientists believe this system helps the colony collect food efficiently, which is essential for the survival of the hive, especially in seasons when flowers are scarce.`
+  },
+
+  p1_violin: {
+    title: "The Lost Violin",
+    text: `Dina stood at the edge of the stage, her hands cold and trembling. In ten minutes, she would play in the school's music festival, but her violin was missing. She had searched the classroom, the hallway, and even the bus stop outside the school. Nothing. Her friend Raka hurried toward her, holding a long black case. "Someone left this under the bench near the gate," he panted. Dina opened the case and sighed with relief. Her violin lay safely inside, wrapped in the blue scarf her grandmother had given her. She hugged the case tightly, took a deep breath, and walked toward the bright lights.`
+  },
+
+  p1_coral: {
+    title: "Coral Reefs",
+    text: `Coral reefs cover less than one percent of the ocean floor, yet about a quarter of all marine species depend on them. Corals are tiny animals that live in colonies and build hard skeletons of limestone. Many reefs are in warm, shallow water where sunlight can reach tiny algae living inside the corals. When the water becomes too warm, the corals push out these algae and turn white, a process called bleaching. Bleached corals are not dead, but they are weak and may die if the water does not cool down soon. Besides climate change, pollution and careless fishing also damage reefs.`
+  },
+
+  p1_curie: {
+    title: "Marie Curie",
+    text: `Marie Curie was born in Warsaw, Poland, in 1867. As a young woman she moved to Paris to study physics and mathematics at the Sorbonne. There she met Pierre Curie, a scientist, whom she later married. Together they studied radioactivity, a word she herself introduced, and discovered two new elements, polonium and radium.
+In 1903 she shared the Nobel Prize in Physics, and in 1911 she received a second Nobel Prize, this time in Chemistry. She was the first person to win two Nobel Prizes. During World War I, she also helped develop mobile X-ray units, which allowed doctors to treat wounded soldiers closer to the battlefield.`
+  },
+
+  p1_intern_nadia: {
+    title: "An Application Letter by Nadia Putri",
+    text: `An application letter
+Dear Mr. Hadi,
+My name is Nadia Putri, and I am a Grade 12 student at Pelita High School. I am writing to ask whether your company offers internships for students during the school holiday in December. I am interested in graphic design and have created posters and logos for several school events. I believe an internship in your design team would help me improve my skills and understand professional work.
+I can work from Monday to Friday, from 9 a.m. to 3 p.m. I have attached my portfolio and a recommendation letter from my art teacher. Thank you for your time. I look forward to your reply.
+Sincerely,
+Nadia Putri`
+  },
+
+  p1_school_start: {
+    title: "Should Schools Start Later?",
+    text: `Should Schools Start Later?
+Many teenagers struggle to wake up for classes that begin at 7 a.m. Some schools have therefore moved their start time to 8.30 a.m., and the idea has caused a debate.
+Supporters say that teenagers' body clocks make them fall asleep later at night, so they need to sleep later in the morning. A study in one school district found that students who started class later reported being less tired and were absent less often.
+Opponents, however, argue that later start times mean later finishing times. This can disturb sports practice and after-school jobs, and parents who must leave for work early may have difficulty arranging transportation. Others believe the real problem is that students stay up too late using their phones, not the school schedule.
+Both sides have valid points. Perhaps the best solution is to try the change for one semester and then evaluate the results together with students, teachers, and parents.`
+  },
+
+  p1_compost: {
+    title: "How to Make a Simple Compost Bin",
+    text: `How to Make a Simple Compost Bin
+Compost turns kitchen and garden waste into rich soil. You can make a simple compost bin at home. First, find a plastic container with a lid, about 50 liters in size, and drill small holes in the bottom and sides so air and extra water can pass through. Next, put a layer of dry leaves or torn paper at the bottom. Then add fruit and vegetable scraps, and cover them with another layer of dry leaves.
+Do not add meat, oil, or dairy products because they attract animals and cause a bad smell. Finally, stir the mixture once a week and keep it slightly moist. After two to three months, the waste will become dark, crumbly compost ready to use in your garden.`
+  },
+
+  p2_plastic: {
+    title: "Plastic Bag Fee in the City",
+    text: `Since the city introduced a small fee for plastic bags in supermarkets, the number of bags handed out has dropped sharply. Shoppers now bring their own cloth bags or reuse old ones. Store managers report that customers complained less than expected after the first month. However, the fee does not apply to small markets and street vendors, so plastic bags are still common there. Officials say they plan to extend the rule to these places next year.`
+  },
+
+  p2_science_fair: {
+    title: "Smart Science Fair Invitation",
+    text: `YOU ARE INVITED TO THE SMART SCIENCE FAIR!
+Date: Saturday, 15 November | Time: 9 a.m. to 2 p.m. | Place: Garuda Junior High School Hall
+Students from ten schools will present experiments on renewable energy, water cleaning, and robotics. Visitors can try the experiments and vote for their favorite project. Entrance is free, but visitors must register online before 10 November because the number of seats is limited. Lunch will be available at the school canteen.`
+  },
+
+  p2_learning_apps: {
+    title: "Language-Learning Apps",
+    text: `Language-learning apps have changed the way people study English. With short daily lessons, users can practice vocabulary and grammar anywhere, even while waiting for a bus. Many apps give points and rewards when users keep learning every day, which makes studying feel like a game. However, language teachers warn that apps cannot replace real conversation. To speak confidently, learners still need to talk to other people and listen to natural English, for example through films, podcasts, or speaking clubs.`
+  },
+
+  p2_sea_turtles: {
+    title: "Sea Turtles",
+    text: `Sea Turtles
+Sea turtles spend almost their entire lives in the ocean, but every female must return to land to lay eggs. Many return to the same beach where they were born, even after traveling thousands of kilometers.
+At night, a mother turtle crawls up the beach, digs a deep hole with her back flippers, and lays about a hundred eggs. She then covers the nest with sand and returns to the sea. She does not stay to protect the eggs.
+About two months later, the baby turtles hatch and rush toward the sea, guided by the moonlight reflecting on the water. Sadly, bright lights from hotels and roads can confuse them, and many head in the wrong direction. Only a small number of hatchlings survive to adulthood. For this reason, conservation groups protect nests and ask people to turn off beach lights at night.`
+  },
+
+  p2_night_market: {
+    title: "The Night Market",
+    text: `The Night Market
+The night market was already crowded when Bayu arrived with his little sister, Salsa. Colorful lamps hung above the stalls, and the smell of grilled corn and sweet pancakes filled the air. Bayu had promised their mother that he would not let Salsa out of his sight, but a loud drum from a street performance made the crowd move, and suddenly her small hand slipped out of his. His heart pounded. He pushed through the crowd, calling her name again and again. At last, he spotted her near a toy stall, staring at a red kite. "Don't ever run off like that again," he said, hugging her tightly. Salsa smiled and whispered, "I just wanted to see the kite."`
+  },
+
+  p2_bamboo: {
+    title: "Bamboo",
+    text: `Bamboo is a grass, not a tree, although some kinds grow taller than a house. Some species can grow almost one meter in a single day, which makes bamboo one of the fastest-growing plants in the world. Because it grows back after cutting, bamboo can be harvested again and again without replanting. People use it to build houses, make furniture, and even weave baskets and fabrics. Its roots also hold soil together and help prevent landslides on steep hills. However, bamboo can spread quickly and take over land if it is not managed carefully.`
+  },
+
+  p2_kartini: {
+    title: "Raden Ajeng Kartini",
+    text: `Raden Ajeng Kartini
+Raden Ajeng Kartini was born in Jepara, Central Java, on 21 April 1879 into a noble family. She was a bright girl who loved reading, but like most girls of her time she had to leave school at the age of twelve and stay at home. Instead of giving up, she kept learning through books and magazines and wrote letters to friends in the Netherlands, in which she shared her wish that girls could receive a good education.
+Later she opened a small school for local girls at her home. Kartini died in 1904 at the age of only 25. Her letters were collected and published in a book in 1911, which inspired many people to support women's education. Today, Indonesians celebrate Kartini Day every year on 21 April.`
+  },
+
+  p2_museum_trip: {
+    title: "An Email from a Teacher: Museum Trip",
+    text: `An email from a teacher
+Dear parents,
+Our class 9B will have a trip to the National Museum on Thursday, 20 November. The bus will leave school at 7.30 a.m. and return at 3 p.m. Students must wear their sports uniform and bring a notebook, a packed lunch, and a water bottle. The trip fee is Rp75,000, which covers transportation and the museum ticket.
+Please return the permission slip and the fee to the class teacher by 14 November. Students who do not submit the slip will not be allowed to join the trip.
+Best regards,
+Mr. Anton`
+  },
+
+  p2_homework: {
+    title: "Homework: Helpful or Harmful?",
+    text: `Homework: Helpful or Harmful?
+Few topics divide students, parents, and teachers like homework. Some schools have reduced it, while others still give it every day.
+Supporters believe that homework helps students review lessons and develop discipline. A short daily assignment, they say, teaches students to manage their time and study independently.
+Critics argue that too much homework causes stress and leaves little time for rest, family, and hobbies. Several studies suggest that long homework hours do not always lead to better grades, especially for younger students.
+A balanced approach may work best: short, meaningful tasks that clearly connect with what was taught in class, instead of a large amount of repetitive work.`
+  },
+
+  p2_rainbow: {
+    title: "How a Rainbow Forms",
+    text: `How a Rainbow Forms
+A rainbow appears when sunlight and rain meet at the right angle. When sunlight enters a raindrop, it slows down and bends. The light then reflects off the back of the drop and bends again as it leaves. Because each color of light bends by a slightly different amount, white sunlight spreads out into a band of colors: red on the outside, violet on the inside.
+Millions of raindrops do this at the same time, so we see a large arc of colors in the sky. To see a rainbow, the sun must be behind you and the rain in front of you. Rainbows are most common in the morning or late afternoon, when the sun is low.`
+  }
+};
+
+// ======================== DATA SOAL LENGKAP (55 SOAL) ========================
+const allQuestions = [
+  // ==================== PAKET UTAMA: TKA BAHASA INGGRIS SMA 2025 WAJIB (25 SOAL) ====================
+  {
+    id: "u1", pkg: "utama", passageKey: "lion_mouse", label: "Paket Utama • Q1 (The Lion and the Mouse)",
+    kompetensi: "Pemahaman Tekstual - Menyusun Poin Utama Naratif", type: "mcq", difficulty: "mudah",
+    question: "Which option best summarizes the story?",
+    options: {
+      A: "Beginning: A lion was walking through the jungle.\nProblem: The mouse got lost and couldn't find food.\nSolution: The lion gave food to the mouse.\nLesson: Always be generous to those in need.",
+      B: "Beginning: A mouse accidentally disturbed a sleeping lion.\nProblem: The lion was caught in a hunter's net.\nSolution: The mouse chewed through the net and set the lion free.\nLesson: Even the smallest creature can be a great help.",
+      C: "Beginning: The lion and mouse were best friends.\nProblem: The lion got hurt in a fight.\nSolution: The mouse helped him find water.\nLesson: Friendship is built on adventure.",
+      D: "Beginning: A mouse was building a home near a tree.\nProblem: A storm destroyed the tree and trapped the lion.\nSolution: The mouse called for help from the jungle.\nLesson: Teamwork solves big problems.",
+      E: "Beginning: A lion was hungry and searching for food.\nProblem: He couldn't catch any prey.\nSolution: The mouse helped him find food.\nLesson: Hunger teaches humility."
+    },
+    answer: "B",
+    explanation: "Opsi B merangkum alur cerita secara tepat dari awal hingga pesan moral: tikus membangunkan singa yang sedang tidur (Beginning), singa tertangkap jaring pemburu (Problem), tikus menggigit tali jaring hingga singa bebas (Solution), dan pesan moralnya makhluk kecil pun dapat memberikan pertolongan besar (Lesson)."
+  },
+  {
+    id: "u2", pkg: "utama", passageKey: "lion_mouse", label: "Paket Utama • Q2 (The Lion and the Mouse)",
+    kompetensi: "Pemahaman Tekstual - Menyimpulkan Pesan Moral", type: "mcqk", difficulty: "sedang",
+    question: "Which of the following statements best conveys the message of the story?\n(There is more than one answer. Click on every correct answer!)",
+    options: {
+      A: "We should never wake up a sleeping animal",
+      B: "Even the small and weak can help the strong",
+      C: "It's always good to ask for help when we need it",
+      D: "Lions are dangerous animals and should be avoided",
+      E: "Never trust anyone who plays with your hair"
+    },
+    answers: ["B", "C"],
+    explanation: "Pada kalimat terakhir teks disebutkan: 'The lion learned that even small creatures can do great things, and we all need help sometimes.' Ini sesuai dengan pernyataan B (makhluk kecil dan lemah pun bisa menolong yang kuat) dan C (meminta bantuan saat membutuhkan adalah hal yang baik)."
+  },
+  {
+    id: "u3", pkg: "utama", passageKey: "lion_mouse", label: "Paket Utama • Q3 (The Lion and the Mouse)",
+    kompetensi: "Pemahaman Inferensial - Menafsirkan Hubungan Tindakan", type: "mcq", difficulty: "sedang",
+    question: "Why did the lion trust the mouse and decide to let him go instead of eating him?",
+    options: {
+      A: "The lion was too tired to eat the mouse",
+      B: "The mouse told the lion he might help him one day",
+      C: "The lion was feeling happy to see the mouse",
+      D: "The lion heard someone coming and got scared",
+      E: "The mouse promised to bring food for the lion"
+    },
+    answer: "B",
+    explanation: "Dalam paragraf 4 dan 5, tikus memohon: 'If you let me go, I promise I'll help you one day.' Singa merasa terhibur sekaligus berbaik hati mendengar janji tersebut sehingga melepaskan sang tikus."
+  },
+  {
+    id: "u4", pkg: "utama", passageKey: "lion_mouse", label: "Paket Utama • Q4 (The Lion and the Mouse)",
+    kompetensi: "Pemahaman Inferensial - Memprediksi Akhir Cerita", type: "mcqk", difficulty: "sulit",
+    question: "As you read the part where the lion let the mouse go, which of the following endings do you anticipate?\n(There is more than one answer, click on every correct answer!)",
+    options: {
+      A: "The mouse forgets about the lion and never helps him",
+      B: "The lion gets into trouble and no one helps him",
+      C: "The lion becomes angry at all small animals",
+      D: "The mouse spreads the lion's kindness to other animals",
+      E: "The mouse becomes the lion's loyal assistant"
+    },
+    answers: ["D", "E"],
+    explanation: "Setelah singa berbuat baik dengan membebaskan tikus dan tikus berjanji akan membalas budi, kelanjutan yang positif dan logis dalam cerita fabel adalah tikus menyebarkan kebaikan singa (D) dan menjadi sahabat/penolong setia bagi singa (E)."
+  },
+  {
+    id: "u5", pkg: "utama", passageKey: "lion_mouse", label: "Paket Utama • Q5 (The Lion and the Mouse)",
+    kompetensi: "Evaluasi dan Apresiasi - Menilai Karakter Tokoh", type: "mcqk", difficulty: "sulit",
+    question: "Which of the following sentences from the story help you understand the lion's character?\n(There is more than one answer. Click on every correct answer!)",
+    options: {
+      A: "The lion always took his afternoon nap under the shade of a big tree in the bushes.",
+      B: "He caught the mouse and questioned him for interrupting his nap.",
+      C: "The lion was amused at the mouse's words and decided to spare his life.",
+      D: "With his sharp teeth, the mouse nibbled through the net.",
+      E: "The lion thanked the mouse immensely for his help."
+    },
+    answers: ["B", "C", "E"],
+    explanation: "Karakter singa tergambar dari tiga kalimat tersebut: tegas/pemarah saat tidurnya diganggu (B), murah hati/pemaaf saat mengampuni nyawa tikus (C), serta tahu berterima kasih dan rendah hati setelah diselamatkan tikus (E)."
+  },
+  {
+    id: "u6", pkg: "utama", passageKey: "study_tech", label: "Paket Utama • Q6 (Effective Study Techniques)",
+    kompetensi: "Pemahaman Tekstual - Mengidentifikasi Informasi Eksplisit", type: "mcq", difficulty: "mudah",
+    question: "Based on the information given, we can keep our mind focused and fresh by ....",
+    options: {
+      A: "knowing your learning style",
+      B: "using Pomodoro Technique",
+      C: "using online quizzes apps",
+      D: "by reviewing materials",
+      E: "by creating mind maps"
+    },
+    answer: "B",
+    explanation: "Pada poin ke-4 infografik tertulis jelas: 'Use the Pomodoro Technique: Study for 25 minutes, then take a 5-minute break. This keeps your mind fresh and focused.'"
+  },
+  {
+    id: "u7", pkg: "utama", passageKey: "study_tech", label: "Paket Utama • Q7 (Effective Study Techniques)",
+    kompetensi: "Pemahaman Tekstual - Mengklasifikasi Informasi", type: "tf", difficulty: "sedang",
+    col1: "Time Management", col2: "Self Management",
+    question: "Based on the infographic, determine whether each study technique listed on the left is categorized as Time Management or Self Management.",
+    statements: [
+      {
+        text: "Be patient and persistent",
+        answer: "Self Management",
+        explanation: "Bersabar dan tekun ('Be patient and persistent') berkaitan dengan pengelolaan emosi dan sikap diri (Self Management)."
+      },
+      {
+        text: "Use the Pomodoro technique",
+        answer: "Time Management",
+        explanation: "Teknik Pomodoro mengatur durasi belajar 25 menit dan istirahat 5 menit sehingga termasuk pengelolaan waktu (Time Management)."
+      },
+      {
+        text: "Set a consistent study schedule",
+        answer: "Time Management",
+        explanation: "Menetapkan jadwal belajar di waktu yang sama setiap hari termasuk pengelolaan waktu (Time Management)."
+      }
+    ]
+  },
+  {
+    id: "u8", pkg: "utama", passageKey: "study_tech", label: "Paket Utama • Q8 (Effective Study Techniques)",
+    kompetensi: "Pemahaman Tekstual - Menyusun Kerangka Prosedur", type: "mcq", difficulty: "sedang",
+    question: "From the options provided, choose the sequence that best reflects the information in the infographic 'Effective Study Techniques'.",
+    options: {
+      A: "Set your goal → Watch lessons videos → Sleep well → Have group chat with friends → Eat nutritious meal",
+      B: "Plan study time → Join a study group → Take long breaks → Write a to do list → Write important points",
+      C: "Know your learning style → Find a quiet area → Set a timetable → Use less gadgets → Be patient and persistent",
+      D: "Know your study style → Plan your study time → Practice and repeat → Take a break → Watch lessons videos",
+      E: "Take notes → Join a study groups → Use different medias → Play music you like → Have good meal while studying"
+    },
+    answer: "D",
+    explanation: "Seluruh tahapan pada opsi D sesuai dengan isi infografik: Know your study style (poin 1), Plan your study time (poin 2), Practice and repeat (poin 6), Take a break (poin 4), dan Watch lessons videos (poin 8). Opsi C salah karena menyebutkan 'Use less gadgets', padahal poin 8 menganjurkan pemanfaatan teknologi/aplikasi."
+  },
+  {
+    id: "u9", pkg: "utama", passageKey: "study_tech", label: "Paket Utama • Q9 (Effective Study Techniques)",
+    kompetensi: "Pemahaman Inferensial - Menyimpulkan Tujuan Penulisan", type: "mcqk", difficulty: "sulit",
+    question: "Which of the following statements best reflect the author's purpose in writing the text?\n(There is more than one correct answer. Click on every correct answer!)",
+    options: {
+      A: "To help students find fun strategies to play after studying",
+      B: "To offer students guidance on how to learn more efficiently",
+      C: "To encourage students to use simple habits to improve their learning",
+      D: "To explain why studying tips is difficult for most students",
+      E: "To show students that they can manage their time and focus better"
+    },
+    answers: ["B", "C", "E"],
+    explanation: "Tujuan penulis menyajikan infografik 'Effective Study Techniques' adalah memberikan panduan belajar yang efisien (B), mendorong kebiasaan sederhana untuk meningkatkan hasil belajar (C), serta membantu siswa mengelola waktu dan fokus dengan lebih baik (E)."
+  },
+  {
+    id: "u10", pkg: "utama", passageKey: "study_tech", label: "Paket Utama • Q10 (Effective Study Techniques)",
+    kompetensi: "Evaluasi dan Apresiasi - Menilai Aplikasi Nyata", type: "mcqk", difficulty: "sulit",
+    question: "If you are preparing for an important exam and want to improve your study routine, which of the following techniques do you think can be implemented effectively in your personal study time?\n(There is more than one correct answer. Click on every correct answer!)",
+    options: {
+      A: "Only study when you are in a group discussion with others",
+      B: "Use technology during all study sessions in or outside class",
+      C: "Use the Pomodoro Technique to structure your study and break time",
+      D: "Practice and repeat study material regularly to retain information",
+      E: "Create a quiet and comfortable study space to improve focus"
+    },
+    answers: ["C", "D", "E"],
+    explanation: "Saat belajar mandiri (personal study time) untuk persiapan ujian, teknik yang efektif diterapkan dari infografik adalah mengatur waktu belajar dan istirahat dengan Pomodoro (C), berlatih dan mengulang materi secara berkala (D), serta menyiapkan ruang belajar yang tenang dan bebas gangguan (E)."
+  },
+  {
+    id: "u11", pkg: "utama", passageKey: "false_lion", label: "Paket Utama • Q11 (The False Lion King)",
+    kompetensi: "Pemahaman Tekstual - Urutan Kronologis Peristiwa", type: "mcq", difficulty: "mudah",
+    question: "Which statement provides the most accurate chronological summary of the story's main events?",
+    options: {
+      A: "• Shero falls into the dirt.\n• The hyenas cause trouble at the river.\n• Hera tells Shero that he is funny.\n• Shero copies Hera's roar.\n• Shero becomes the kingdom's funny helper.",
+      B: "• Hera is a strong lion king.\n• Shero likes to pretend to be strong.\n• The hyenas cause trouble near the river.\n• Hera scares the hyenas, but Shero makes them laugh.\n• Shero learns that making others happy is special.",
+      C: "• Hera and Shero are both strong leaders.\n• The hyenas come to help the lions.\n• Shero tells funny stories to the hyenas.\n• Hera is angry with Shero.\n• The lions and hyenas become friends.",
+      D: "• Shero is a strong lion king.\n• Hera is jealous of Shero.\n• The hyenas attack the lions.\n• Shero defeats the hyenas.\n• Shero becomes the new king.",
+      E: "• Shero wants to be king and fights Hera.\n• The hyenas help Shero.\n• Hera leaves the kingdom.\n• Shero becomes king.\n• Hera returns to forgive Shero."
+    },
+    answer: "B",
+    explanation: "Opsi B menyajikan urutan peristiwa yang akurat sesuai paragraf 1 hingga 6: pengenalan Hera yang kuat dan Shero yang suka berpura-pura kuat, gangguan hyena di dekat sungai, auman Hera yang menakutkan hyena sedangkan tingkah Shero membuat hyena tertawa, hingga Shero menyadari bakat spesialnya dalam menghibur."
+  },
+  {
+    id: "u12", pkg: "utama", passageKey: "false_lion", label: "Paket Utama • Q12 (The False Lion King)",
+    kompetensi: "Pemahaman Inferensial - Pesan Moral Cerita", type: "mcqk", difficulty: "sedang",
+    question: "What can we learn from the story of Hera and Shero?\n(There is more than one correct answer. Click for every correct answer!)",
+    options: {
+      A: "Everyone has something special to give, even if they are not the leader",
+      B: "Being funny and making others smile is just as important as being strong",
+      C: "Good friends will support you and help you see your real strengths",
+      D: "Working together is better when people use their different talents",
+      E: "Trying your best to help others is more important than always being perfect"
+    },
+    answers: ["A", "B", "D"],
+    explanation: "Berdasarkan dua paragraf terakhir: setiap individu memiliki bakat/keistimewaan masing-masing ('understood that he had his own special gift' -> A), kelucuan/hiburan sama pentingnya dengan kekuatan ('both power and fun are important in life' -> B), dan kepemimpinan bersama menjadi lebih baik saat menggabungkan bakat yang berbeda ('He and Hera ruled together—one with strength, and one with laughter' -> D)."
+  },
+  {
+    id: "u13", pkg: "utama", passageKey: "false_lion", label: "Paket Utama • Q13 (The False Lion King)",
+    kompetensi: "Pemahaman Tekstual - Hubungan Sebab-Akibat", type: "mcq", difficulty: "mudah",
+    question: "The hyenas laugh so much when Shero tries to roar like Hera because ....",
+    options: {
+      A: "Shero tries to roar in a serious way and surprises the hyenas",
+      B: "Shero's roar is funny, which the hyenas think he is joking",
+      C: "Hera tells a joke about Shero to make the hyenas laugh",
+      D: "Shero is acting like Hera, and it's absolutely brilliant",
+      E: "Shero trips and falls when trying to show his strength"
+    },
+    answer: "B",
+    explanation: "Pada paragraf ke-3 tertulis: 'Shero also tried to roar, but his voice was high and silly. The hyenas laughed at him. Their leader, Hank the Hyena, made jokes about Shero.' Jadi saat Shero mencoba mengaum, suaranya yang melengking dan konyol membuat para hyena menertawakannya."
+  },
+  {
+    id: "u14", pkg: "utama", passageKey: "false_lion", label: "Paket Utama • Q14 (The False Lion King)",
+    kompetensi: "Pemahaman Inferensial - Prediksi Hipotetis", type: "mcqk", difficulty: "sulit-sekali",
+    question: "If in the beginning of the story, Shero is a strong lion with a loud roar, just like Hera, what would happen in the end of the story?\n(There is more than one correct answer. Click for every correct answer!)",
+    options: {
+      A: "Shero and Hera would both scare the hyenas away together",
+      B: "Shero would become the king, and Hera would leave the savannah",
+      C: "Shero would get respect from the other animals for his strength",
+      D: "The hyenas would still laugh at Shero because he is funny",
+      E: "Shero would try to take Hera's place as the only lion king"
+    },
+    answers: ["A", "C"],
+    explanation: "Jika sejak awal Shero juga merupakan singa yang gagah dan memiliki auman keras seperti Hera, maka saat menghadapi hyena di sungai mereka berdua akan bersama-sama menakuti kawanan hyena (A) dan Shero juga akan dihormati oleh hewan-hewan lain karena kekuatannya (C)."
+  },
+  {
+    id: "u15", pkg: "utama", passageKey: "false_lion", label: "Paket Utama • Q15 (The False Lion King)",
+    kompetensi: "Evaluasi dan Apresiasi - Bukti Watak Tokoh", type: "mcqk", difficulty: "sulit",
+    question: "Shero is clumsy and funny, this is shown when he ....\n(There is more than one correct answer. Click for every correct answer!)",
+    options: {
+      A: "scares the hyenas away with his loud and powerful roar",
+      B: "makes the other animals smile by pretending to be a great king",
+      C: "tries to roar like Hera, but his voice is small and makes the hyenas laugh",
+      D: "walks with Hera to confront the hyenas, acting as if he is an important king too",
+      E: "tells the hyenas that he is as mighty as King Hera, even though no one believes him"
+    },
+    answers: ["B", "C", "E"],
+    explanation: "Sifat Shero yang lucu dan konyol ditunjukkan ketika ia meniru Hera hingga membuat hewan lain tertawa (B), mencoba mengaum tetapi suaranya kecil/melengking sehingga ditertawakan hyena (C), dan bersikeras berkata 'I am just as strong as Hera!' lalu tersandung jatuh saat hendak pamer kekuatan (E)."
+  },
+  {
+    id: "u16", pkg: "utama", passageKey: "barrier_reef", label: "Paket Utama • Q16 (The Great Barrier Reef)",
+    kompetensi: "Pemahaman Tekstual - Informasi Eksplisit Deskriptif", type: "mcqk", difficulty: "mudah",
+    question: "Which of the following descriptions are mentioned clearly in the text?\n(There are more than one correct answer. Click on every correct answer!)",
+    options: {
+      A: "The reef was built by local communities over hundreds of years",
+      B: "The reef is located in the Pacific Ocean near Australia",
+      C: "The reef can help protect the coast from big waves",
+      D: "The reef is home to sea turtles and dolphins",
+      E: "The reef has more than 10,000 coral islands"
+    },
+    answers: ["B", "C", "D"],
+    explanation: "Informasi yang disebutkan secara eksplisit dalam teks adalah: terletak di Samudra Pasifik dekat pantai timur laut Australia (B - paragraf 1), membantu melindungi pantai dari ombak besar dan badai (C - paragraf 4), serta menjadi rumah bagi penyu dan lumba-lumba (D - paragraf 2)."
+  },
+  {
+    id: "u17", pkg: "utama", passageKey: "barrier_reef", label: "Paket Utama • Q17 (The Great Barrier Reef)",
+    kompetensi: "Pemahaman Inferensial - Makna Frasa", type: "mcq", difficulty: "sedang",
+    question: "The author mentioned 'It feels like a different world under the sea'. What does the phrase 'a different world under the sea' most likely mean?",
+    options: {
+      A: "A safe place that has bright reef",
+      B: "A peaceful place where people can live under water",
+      C: "A colorful place that looks the same as the land",
+      D: "A shining reef that is quiet",
+      E: "A calm place that looks beautiful and unique"
+    },
+    answer: "E",
+    explanation: "Dalam paragraf ke-3, penulis menggambarkan warna-warni terumbu karang, gerakan karang lunak seperti rumput tertiup angin, dan cahaya matahari di bawah air yang menciptakan suasana tenang, sangat indah, dan unik berbeda dari daratan (E)."
+  },
+  {
+    id: "u18", pkg: "utama", passageKey: "barrier_reef", label: "Paket Utama • Q18 (The Great Barrier Reef)",
+    kompetensi: "Pemahaman Inferensial - Ide Pokok Tersirat", type: "mcq", difficulty: "sedang",
+    question: "Which of the following best represents the main idea implied by the text?",
+    options: {
+      A: "The reef is useful for fishing and shipping",
+      B: "The reef is large, but not important to people",
+      C: "The reef is a natural treasure that must be cared for",
+      D: "The reef is only for scientists and researchers to explore",
+      E: "The reef is a protected area that should be closed to visitors"
+    },
+    answer: "C",
+    explanation: "Keseluruhan teks menonjolkan betapa indah dan pentingnya Great Barrier Reef bagi ekosistem laut maupun manusia ('Without the reef, the ocean would not be the same'), sehingga menyiratkan gagasan utama bahwa terumbu karang tersebut adalah kekayaan alam berharga yang harus dijaga (C)."
+  },
+  {
+    id: "u19", pkg: "utama", passageKey: "barrier_reef", label: "Paket Utama • Q19 (The Great Barrier Reef)",
+    kompetensi: "Pemahaman Inferensial - Detail Pendukung Persuasif", type: "mcq", difficulty: "sedang",
+    question: "Which detail would best encourage people to visit the Great Barrier Reef?",
+    options: {
+      A: "Visitors can see an Australian national park",
+      B: "Visitors can stay in hotels around the reef",
+      C: "Visitors can get there by boat or short flights",
+      D: "Visitors can protect the coral and the animals",
+      E: "Visitors can see the coral by diving or swimming"
+    },
+    answer: "E",
+    explanation: "Sesuai kalimat terakhir paragraf 2 ('People can see this beauty by swimming, diving, or joining a boat tour'), daya tarik utama yang mendorong wisatawan berkunjung adalah pengalaman melihat keindahan terumbu karang secara langsung dengan menyelam atau berenang (E)."
+  },
+  {
+    id: "u20", pkg: "utama", passageKey: "barrier_reef", label: "Paket Utama • Q20 (The Great Barrier Reef)",
+    kompetensi: "Evaluasi dan Apresiasi - Mengevaluasi Bukti Pendukung", type: "mcqk", difficulty: "sulit",
+    question: "Which parts of the text best support the idea that the Great Barrier Reef is both beautiful and important?\n(There is more than one correct answer. Click on every correct answer!)",
+    options: {
+      A: "The reef helps protect the coast from big waves",
+      B: "It is home to sea turtles, dolphins, and colorful fish",
+      C: "The coral reefs grow best in cold, deep water",
+      D: "Some areas of the reef are damaged by starfish and warm water",
+      E: "The reef was discovered by sailors in the 1800s"
+    },
+    answers: ["A", "B"],
+    explanation: "Pernyataan A membuktikan peran penting terumbu karang dalam melindungi garis pantai dari gelombang besar, sedangkan pernyataan B membuktikan keindahan sekaligus fungsi ekologisnya sebagai habitat ikan warna-warni, penyu, dan lumba-lumba."
+  },
+  {
+    id: "u21", pkg: "utama", passageKey: "manage_money", label: "Paket Utama • Q21 (Manage Money)",
+    kompetensi: "Pemahaman Tekstual - Mengklasifikasi Tujuan Keuangan", type: "tf", difficulty: "mudah",
+    col1: "Short-term financial goals", col2: "Long-term financial goals",
+    question: "Based on the text, choose the category that best fits each financial goal description:",
+    statements: [
+      {
+        text: "Saving money for university",
+        answer: "Long-term financial goals",
+        explanation: "Disebutkan secara eksplisit di paragraf 2: 'long-term goals, like saving for college or starting a business.'"
+      },
+      {
+        text: "Saving to buy a new phone",
+        answer: "Short-term financial goals",
+        explanation: "Disebutkan secara eksplisit di paragraf 2: 'short-term goals, like getting a new phone'."
+      },
+      {
+        text: "Starting a business",
+        answer: "Long-term financial goals",
+        explanation: "Disebutkan secara eksplisit di paragraf 2: 'long-term goals, like saving for college or starting a business.'"
+      }
+    ]
+  },
+  {
+    id: "u22", pkg: "utama", passageKey: "manage_money", label: "Paket Utama • Q22 (Manage Money)",
+    kompetensi: "Pemahaman Tekstual - Mensintesis Informasi", type: "mcqk", difficulty: "sulit",
+    question: "According to the text, which of the following actions support smart money management for students?\n(There is more than one correct answer. Click on every correct answer!)",
+    options: {
+      A: "Tracking daily expenses using a notebook or app",
+      B: "Spending more money than the monthly budget allows",
+      C: "Setting financial goals for the short and long term",
+      D: "Borrowing money whenever there is not enough left",
+      E: "Dividing money into saving, spending, and emergency funds"
+    },
+    answers: ["A", "C", "E"],
+    explanation: "Berdasarkan paragraf 2, 3, dan 4, pengelolaan uang yang cerdas mencakup mencatat pengeluaran dengan catatan/aplikasi (A), menetapkan tujuan jangka pendek dan panjang (C), serta membagi anggaran untuk tabungan, pengeluaran, dan dana darurat/tak terduga (E)."
+  },
+  {
+    id: "u23", pkg: "utama", passageKey: "manage_money", label: "Paket Utama • Q23 (Manage Money)",
+    kompetensi: "Pemahaman Inferensial - Menyimpulkan Target Pembaca", type: "mcqk", difficulty: "sedang",
+    question: "Who is most likely to be the target audience of this text?\n(There is more than one correct answer. Click on every correct answer!)",
+    options: {
+      A: "Teenagers who are learning to manage their money",
+      B: "Parents looking for tips on how to control their children's spending",
+      C: "Students who want to plan for their financial future",
+      D: "High school readers who need to understand saving and budgeting",
+      E: "Bankers and financial experts"
+    },
+    answers: ["A", "C", "D"],
+    explanation: "Dilihat dari judul dan isi teks (yang membahas uang saku, menabung untuk kuliah, dan anggaran bulanan pelajar), target pembaca utamanya adalah para remaja yang belajar mengelola uang (A), pelajar yang ingin merencanakan masa depan finansial (C), dan siswa SMA yang perlu memahami cara menabung serta membuat anggaran (D)."
+  },
+  {
+    id: "u24", pkg: "utama", passageKey: "manage_money", label: "Paket Utama • Q24 (Manage Money)",
+    kompetensi: "Pemahaman Inferensial - Menentukan Fakta Tambahan", type: "mcq", difficulty: "sulit",
+    question: "Which information would make the text more informative about student spending habits?",
+    options: {
+      A: "A paragraph about the history of financial education in schools",
+      B: "A table showing common monthly high school students expenses",
+      C: "A graph comparing saving habits between teenagers and adults",
+      D: "A chart listing popular entertainment choices among students",
+      E: "A paragraph about students' experiences in managing budget"
+    },
+    answer: "B",
+    explanation: "Karena fokus pertanyaan adalah membuat teks lebih informatif mengenai kebiasaan pengeluaran siswa ('student spending habits'), maka tambahan data yang paling relevan dan terukur adalah tabel rincian pengeluaran bulanan siswa SMA pada umumnya (B)."
+  },
+  {
+    id: "u25", pkg: "utama", passageKey: "manage_money", label: "Paket Utama • Q25 (Manage Money)",
+    kompetensi: "Evaluasi dan Apresiasi - Menilai Dukungan Fakta dan Data", type: "mcqk", difficulty: "sulit-sekali",
+    question: "Which of the following statements are supported by clear data or facts in the text and table?\n(There is more than one correct answer. Click on every correct answer!)",
+    options: {
+      A: "45% of students save money regularly",
+      B: "Tracking expenses can help understand spending habits",
+      C: "Most students do not care about money at all",
+      D: "Saving 10% of allowance is a good practice",
+      E: "Spending on fun activities is always better than saving"
+    },
+    answers: ["A", "B", "D"],
+    explanation: "Sesuai Tabel 1 dan isi teks: 45% siswa menabung secara rutin minimal 10% dari uang saku mereka (mendukung A dan D), dan mencatat pengeluaran dengan catatan/aplikasi sebanyak 35% membantu siswa memahami kebiasaan belanja mereka (B)."
+  },
+
+  // ==================== PAKET 2: TRYOUT TKA-1 PROSUS INTEN (30 SOAL) ====================
+  {
+    id: "i1", pkg: "inten", passageKey: "inten_ai", label: "Prosus INTEN • No. 1 (AI in the Workplace)",
+    kompetensi: "Pemahaman Inferensial - Dampak Sektor Industri", type: "tf", difficulty: "sulit-sekali",
+    col1: "YES", col2: "NO",
+    question: "Based on the information given, which industry sectors are heavily impacted by AI?",
+    statements: [
+      {
+        text: "A. Information and communication",
+        answer: "YES",
+        explanation: "Teks menyebutkan AI menganalisis data dalam jumlah besar, mendeteksi pola komunikasi/keterampilan, serta menuntut kebijakan privasi data (sangat berdampak pada sektor informasi dan komunikasi)."
+      },
+      {
+        text: "B. Financial and insurance activities",
+        answer: "YES",
+        explanation: "Teks menjelaskan kemampuan AI dalam menganalisis data besar secara cepat untuk membuat prediksi akurat ('accurate forecasts') dan keputusan berbasis data yang menjadi inti sektor keuangan dan asuransi."
+      },
+      {
+        text: "C. Agriculture, Forestry and Fisheries",
+        answer: "NO",
+        explanation: "Teks berfokus pada lingkungan kerja manajerial, pengolahan data, dan pelatihan karyawan kantor, bukan sektor primer pertanian, kehutanan, dan perikanan."
+      }
+    ]
+  },
+  {
+    id: "i2", pkg: "inten", passageKey: "inten_bali", label: "Prosus INTEN • No. 2 (Bali's Natural Wonders)",
+    kompetensi: "Pemahaman Tekstual - Klasifikasi Tujuan Kunjungan", type: "tf", difficulty: "sedang",
+    col1: "Conservation", col2: "Relaxation",
+    question: "What is the main purpose of visiting these places: to support conservation or to relax?",
+    statements: [
+      {
+        text: "A. Munduk Waterfall",
+        answer: "Relaxation",
+        explanation: "Paragraf 3 menyebutkan secara eksplisit: 'Munduk is the perfect place to relax and enjoy Bali's natural charm.'"
+      },
+      {
+        text: "B. West Bali National Park",
+        answer: "Conservation",
+        explanation: "Paragraf 2 menjelaskan bahwa kawasan ini adalah area konservasi yang dilindungi ('protected area') tempat hidupnya burung langka Jalak Bali (Bali Starling)."
+      },
+      {
+        text: "C. Tegalalang Rice Terraces",
+        answer: "Relaxation",
+        explanation: "Paragraf 4 menyebutkan: 'The quiet surroundings and slow rhythm of farm life create a peaceful and inspiring scene' yang memberikan ketenangan/relaksasi."
+      }
+    ]
+  },
+  {
+    id: "i3", pkg: "inten", passageKey: "inten_socmed", label: "Prosus INTEN • No. 3 (Social Media & Mental Health)",
+    kompetensi: "Pemahaman Tekstual - Verifikasi Dampak Media Sosial", type: "tf", difficulty: "sedang",
+    col1: "YES", col2: "NO",
+    question: "Based on the information given, using social media extensively brings about unintended effects on users who are mostly youths, meaning to....",
+    statements: [
+      {
+        text: "A. They tend to compare themselves to others in an unhealthy way",
+        answer: "YES",
+        explanation: "Sesuai kalimat pertama paragraf 2: 'First, social media often makes teenagers compare themselves to others in an unhealthy way.'"
+      },
+      {
+        text: "B. Victims of online bullying always find help in many ways",
+        answer: "NO",
+        explanation: "Bertentangan dengan paragraf 4 yang menyatakan: 'Victims of cyberbullying often feel alone, scared, and helpless'."
+      },
+      {
+        text: "C. Social media use affects the quality of their sleep",
+        answer: "YES",
+        explanation: "Sesuai paragraf 3: 'Many teenagers use their phones late at night... which reduces sleep time and quality.'"
+      }
+    ]
+  },
+  {
+    id: "i4", pkg: "inten", passageKey: "inten_bali", label: "Prosus INTEN • No. 4 (Bali's Natural Wonders)",
+    kompetensi: "Evaluasi dan Apresiasi - Bukti Deskripsi Keindahan Alam", type: "mcqk", difficulty: "sulit",
+    question: "Which parts of the text best support the description of Bali as 'Bali is full of natural beauty'?\n(There is more than one correct answer. Click on every correct answer!)",
+    options: {
+      A: "A peaceful area filled with green forests, calm mangrove swamps, and colorful coral reefs along the sea.",
+      B: "These terraces are shaped by generations of farmers who work the land by tractor.",
+      C: "Water flows gently over rocky cliffs into a cool, clear pool. Mist rises into the air, mixing with the calming sound of falling water.",
+      D: "In the morning, mist rises above the fields, and sunlight reflects off the water in the paddies.",
+      E: "Farmers in narrow-brimmed hats plant rice carefully, their feet sinking into the soft earth."
+    },
+    answers: ["A", "C", "D"],
+    explanation: "Kalimat A (paragraf 2), C (paragraf 3), dan D (paragraf 4) dikutip langsung dari teks untuk menggambarkan keindahan alam Bali. Opsi B salah karena petani bekerja dengan tangan ('by hand', bukan 'by tractor'), dan opsi E salah karena petani memakai topi bertepi lebar ('wide-brimmed hats', bukan 'narrow-brimmed hats')."
+  },
+  {
+    id: "i5", pkg: "inten", passageKey: "inten_socmed", label: "Prosus INTEN • No. 5 (Social Media & Mental Health)",
+    kompetensi: "Pemahaman Inferensial - Hubungan Sebab-Akibat", type: "mcqk", difficulty: "sedang",
+    question: "What will happen if teenagers have poor sleep quality?\n(There is more than one correct answer. Click on every correct answer!)",
+    options: {
+      A: "Teenagers' grades could drop.",
+      B: "Teens struggle to focus in class.",
+      C: "Teens are likely to feel stressed.",
+      D: "Teenagers will be more confident.",
+      E: "Teens will become mentally strong."
+    },
+    answers: ["A", "B", "C"],
+    explanation: "Berdasarkan paragraf ke-3: 'Without enough sleep, teens cannot focus well in class (B), and their grades may suffer (A). This can increase stress and worry about the future (C).'"
+  },
+  {
+    id: "i6", pkg: "inten", passageKey: "inten_intern", label: "Prosus INTEN • No. 6 (Sports Club Internship)",
+    kompetensi: "Pemahaman Inferensial - Menyimpulkan Karakter Tokoh", type: "mcqk", difficulty: "sulit",
+    question: "What are the best words to describe the writer's personality during the internship?\n(There is more than one correct answer. Click on every correct answer!)",
+    options: {
+      A: "Careful and ready to help",
+      B: "Confident and enjoys working alone",
+      C: "Responsible and willing to learn",
+      D: "Friendly and works well with others",
+      E: "Creative and likes to try new things"
+    },
+    answers: ["A", "C", "D"],
+    explanation: "Selama magang, penulis mengikuti instruksi dengan cermat dan sigap mengambil kotak P3K saat pemain cedera (Careful and ready to help - A), bangun pagi tepat waktu dan mau belajar menangani keadaan darurat (Responsible and willing to learn - C), serta mendapat pujian atas kerja sama tim dan komunikasinya (Friendly and works well with others - D)."
+  },
+  {
+    id: "i7", pkg: "inten", passageKey: "inten_intern", label: "Prosus INTEN • No. 7 (Sports Club Internship)",
+    kompetensi: "Pemahaman Tekstual - Informasi Eksplisit", type: "mcq", difficulty: "mudah",
+    question: "During the internship, what did the writer do every morning?",
+    options: {
+      A: "Made schedules and explained them to the coaches.",
+      B: "Played football with the team and got the first aid kit.",
+      C: "Prepared a club gift, guided the coaches, and gave t-shirts.",
+      D: "Woke up early, arrived on time, and followed the instructions.",
+      E: "Set up cones, brought water, and checked emergency schedules."
+    },
+    answer: "D",
+    explanation: "Tercantum secara eksplisit pada kalimat ke-4 paragraf kedua: 'Every morning I had to wake up early, arrive on time, and follow instructions carefully.'"
+  },
+  {
+    id: "i8", pkg: "inten", passageKey: "inten_plants", label: "Prosus INTEN • No. 8 (Plant Elements)",
+    kompetensi: "Pemahaman Tekstual - Detail Eksplisit Sains", type: "mcq", difficulty: "mudah",
+    question: "Which of the following elements is not taken up from the soil?",
+    options: {
+      A: "Potassium",
+      B: "Magnesium",
+      C: "Carbon",
+      D: "Calcium",
+      E: "Sulfur"
+    },
+    answer: "C",
+    explanation: "Pada kalimat pertama paragraf kedua disebutkan: 'The plant obtains carbon and hydrogen dioxide from the atmosphere; other nutrients are taken up from the soil.' Jadi karbon (Carbon) diambil dari atmosfer, bukan dari tanah."
+  },
+  {
+    id: "i9", pkg: "inten", passageKey: "inten_plants", label: "Prosus INTEN • No. 9 (Plant Elements)",
+    kompetensi: "Pemahaman Inferensial - Alasan Ilmiah", type: "mcq", difficulty: "sedang",
+    question: "Why do farmers prefer considering the only available nutrients to the total quantities of nutrient found in the soil? Because ....",
+    options: {
+      A: "they do not know how to obtain all the nutrients",
+      B: "chemical analyses indicate that the soil constrains all the nutrients needed",
+      C: "the nutrients are in the soil",
+      D: "most of the nutrients are bound in compounds",
+      E: "some of the nutrients are found in the atmosphere"
+    },
+    answer: "D",
+    explanation: "Pada paragraf ketiga dijelaskan: 'Much of this potential supply, however, is bound tightly in forms that are not released to crops fast enough to give satisfactory growth. Because of this, the farmer is interested in measuring the available nutrient supply...'"
+  },
+  {
+    id: "i10", pkg: "inten", passageKey: "inten_plants", label: "Prosus INTEN • No. 10 (Plant Elements)",
+    kompetensi: "Pemahaman Inferensial - Topik Paragraf", type: "mcq", difficulty: "sedang",
+    question: "The topic of paragraph three is about ....",
+    options: {
+      A: "the result of chemical analyses",
+      B: "the requirements of crop plants",
+      C: "giving satisfactory growth to the plants",
+      D: "measuring the available nutrients supply",
+      E: "the abundance of nutrients in the soil"
+    },
+    answer: "D",
+    explanation: "Paragraf ketiga membahas bahwa meskipun total nutrisi di tanah melimpah, sebagian besar terikat kuat sehingga petani lebih berkepentingan mengukur pasokan nutrisi yang benar-benar tersedia bagi tanaman ('measuring the available nutrient supply')."
+  },
+  {
+    id: "i11", pkg: "inten", passageKey: "inten_plants", label: "Prosus INTEN • No. 11 (Plant Elements)",
+    kompetensi: "Pemahaman Tekstual - Perhitungan & Identifikasi Unsur", type: "mcq", difficulty: "sulit",
+    question: "How many elements which are not very important can be found in the plants?",
+    options: {
+      A: "Three",
+      B: "Five",
+      C: "Seven",
+      D: "Nine",
+      E: "Sixteen"
+    },
+    answer: "B",
+    explanation: "Pada paragraf kedua disebutkan 5 unsur yang ditemukan pada tanaman tetapi tidak esensial ('apparently not essential'), yaitu: sodium, iodine, cobalt, silicon, dan aluminum (5 unsur). (Catatan: jika dihitung dari selisih 16 kebutuhan unsur dikurangi 9 unsur terpenting di paragraf 1 hasilnya 7, namun unsur non-esensial yang secara eksplisit disebutkan ada di dalam tanaman pada paragraf 2 berjumlah 5)."
+  },
+  {
+    id: "i12", pkg: "inten", passageKey: "inten_plants", label: "Prosus INTEN • No. 12 (Plant Elements)",
+    kompetensi: "Pemahaman Tekstual - Sinonim Kosakata", type: "mcq", difficulty: "mudah",
+    question: "'The plant obtains carbon and hydrogen dioxide ...' (paragraph 2). The underlined word 'obtains' means ....",
+    options: {
+      A: "gets",
+      B: "takes",
+      C: "puts",
+      D: "gives",
+      E: "has"
+    },
+    answer: "A",
+    explanation: "Kata 'obtains' berarti memperoleh atau mendapatkan, sehingga sinonim yang paling tepat adalah 'gets'."
+  },
+  {
+    id: "i13", pkg: "inten", passageKey: "inten_ecology", label: "Prosus INTEN • No. 13 (Polar Bears & Ecology)",
+    kompetensi: "Pemahaman Tekstual - Informasi Spesifik", type: "mcq", difficulty: "mudah",
+    question: "The habitat of polar bear is in ....",
+    options: {
+      A: "the tropical countries",
+      B: "the North pole",
+      C: "the South pole",
+      D: "the Arctic seas",
+      E: "Europe"
+    },
+    answer: "B",
+    explanation: "Kalimat pertama teks menyatakan: 'Polar bears are adapted to life in the polar region, around the North Pole.'"
+  },
+  {
+    id: "i14", pkg: "inten", passageKey: "inten_ecology", label: "Prosus INTEN • No. 14 (Polar Bears & Ecology)",
+    kompetensi: "Pemahaman Inferensial - Topik Utama Teks", type: "mcq", difficulty: "sedang",
+    question: "What does the text mainly discuss?",
+    options: {
+      A: "ecology",
+      B: "polar bears",
+      C: "cycles in nature",
+      D: "the misuse of pesticides",
+      E: "an ideal ecological system"
+    },
+    answer: "A",
+    explanation: "Teks ini menggunakan beruang kutub, siklus nitrogen/oksigen, dan dampak pestisida sebagai contoh untuk menjelaskan ilmu ekologi ('ecology') beserta prinsip keseimbangan ekosistemnya."
+  },
+  {
+    id: "i15", pkg: "inten", passageKey: "inten_ecology", label: "Prosus INTEN • No. 15 (Polar Bears & Ecology)",
+    kompetensi: "Pemahaman Inferensial - Sebab Kerusakan Ekologi", type: "mcq", difficulty: "sedang",
+    question: "The ecology in certain area will be in danger if ....",
+    options: {
+      A: "seals eat a lot of fish",
+      B: "the farmers use pesticides",
+      C: "polar bears don't eat seals anymore",
+      D: "man interferes his environment too much",
+      E: "plants take nitrogen compound from the soil"
+    },
+    answer: "D",
+    explanation: "Pada paragraf kelima disebutkan: 'However, particularly where man interferes, a species may become too successful and abundant, and the balance is destroyed.'"
+  },
+  {
+    id: "i16", pkg: "inten", passageKey: "inten_ecology", label: "Prosus INTEN • No. 16 (Polar Bears & Ecology)",
+    kompetensi: "Pemahaman Inferensial - Gagasan Utama Paragraf", type: "mcq", difficulty: "sedang",
+    question: "The main idea of paragraph 3 is that ....",
+    options: {
+      A: "Polar bears depend on seals",
+      B: "Ecological system needs well treatment",
+      C: "Plants and animals depend on each other",
+      D: "Plants produce and release oxygen to the atmosphere",
+      E: "There's an interdependence of living things in a particular area."
+    },
+    answer: "E",
+    explanation: "Kalimat utama paragraf 3 adalah: 'The first lesson of ecology is that all life in an environment depends on other forms of life.' Ini menyatakan adanya saling ketergantungan (interdependence) antarmakhluk hidup di suatu lingkungan."
+  },
+  {
+    id: "i17", pkg: "inten", passageKey: "inten_ecology", label: "Prosus INTEN • No. 17 (Polar Bears & Ecology)",
+    kompetensi: "Pemahaman Tekstual - Sinonim Kosakata", type: "mcq", difficulty: "mudah",
+    question: "'... the world from devastation.' (paragraph 6). The synonym of the underlined word 'devastation' is ....",
+    options: {
+      A: "rehabilitation",
+      B: "extinction",
+      C: "destruction",
+      D: "preservation",
+      E: "starvation"
+    },
+    answer: "C",
+    explanation: "Kata 'devastation' berarti kehancuran atau kerusakan parah, sehingga bersinonim dengan 'destruction'."
+  },
+  {
+    id: "i18", pkg: "inten", passageKey: "inten_suffrage", label: "Prosus INTEN • No. 18 (Women's Suffrage)",
+    kompetensi: "Pemahaman Tekstual - Fakta Kronologis", type: "mcq", difficulty: "mudah",
+    question: "When were women allowed to vote throughout the United States?",
+    options: {
+      A: "In 1865",
+      B: "After 1868",
+      C: "After 1870",
+      D: "After 1878",
+      E: "After 1920s"
+    },
+    answer: "E",
+    explanation: "Kalimat terakhir paragraf kedua menyebutkan: '...until 1920, when the Nineteenth Amendment granted women the right to vote.'"
+  },
+  {
+    id: "i19", pkg: "inten", passageKey: "inten_suffrage", label: "Prosus INTEN • No. 19 (Women's Suffrage)",
+    kompetensi: "Pemahaman Inferensial - Ide Pokok Paragraf", type: "mcq", difficulty: "sedang",
+    question: "What is mainly discussed in the second paragraph?",
+    options: {
+      A: "The process of giving right to vote to women.",
+      B: "The effects of the civil war.",
+      C: "The right to vote to black people.",
+      D: "The nineteenth amendment.",
+      E: "The Wyoming Territory."
+    },
+    answer: "A",
+    explanation: "Paragraf kedua memaparkan perjuangan panjang dan proses bertahap yang dilalui kaum perempuan untuk memperoleh hak pilih (right to vote) sejak berakhirnya Perang Saudara 1865 hingga disahkannya Amendemen ke-19 pada tahun 1920."
+  },
+  {
+    id: "i20", pkg: "inten", passageKey: "inten_suffrage", label: "Prosus INTEN • No. 20 (Women's Suffrage)",
+    kompetensi: "Pemahaman Inferensial - Topik Utama Bacaan", type: "mcq", difficulty: "sedang",
+    question: "What is the topic of the passage primarily concerned with?",
+    options: {
+      A: "Abolitionists",
+      B: "The civil war",
+      C: "Women's suffrage",
+      D: "The Wyoming Territory",
+      E: "The Fourteenth and Fifteenth Amendment"
+    },
+    answer: "C",
+    explanation: "Secara keseluruhan, teks ini berfokus pada keterlibatan perempuan dalam gerakan reformasi abad ke-19 yang bermuara pada perjuangan meraih hak pilih perempuan (Women's suffrage)."
+  },
+  {
+    id: "i21", pkg: "inten", passageKey: "inten_suffrage", label: "Prosus INTEN • No. 21 (Women's Suffrage)",
+    kompetensi: "Pemahaman Tekstual - Detail Eksplisit", type: "mcq", difficulty: "mudah",
+    question: "During the nineteenth century, what did women in the US organize and participate in?",
+    options: {
+      A: "Public office",
+      B: "Fame throughout the world",
+      C: "Amendment of the Declaration of Independence",
+      D: "Support for Elizabeth Cady Stanton for president",
+      E: "A reform movement"
+    },
+    answer: "E",
+    explanation: "Kalimat pertama paragraf 1 menyatakan: 'During the nineteenth century, women in the United States organized and participated in a large number of reform movements...'"
+  },
+  {
+    id: "i22", pkg: "inten", passageKey: "inten_suffrage", label: "Prosus INTEN • No. 22 (Women's Suffrage)",
+    kompetensi: "Pemahaman Tekstual - Makna Kosakata", type: "mcq", difficulty: "mudah",
+    question: "'A women's suffrage bill had been presented to ...' (paragraph 2). The closest meaning to the underlined word 'suffrage' is ....",
+    options: {
+      A: "freedom from slavery",
+      B: "the right to vote",
+      C: "citizenship",
+      D: "expectation",
+      E: "pain"
+    },
+    answer: "B",
+    explanation: "Kata 'suffrage' berarti hak pilih dalam pemilihan umum ('the right to vote'), sebagaimana dijelaskan pada kalimat terakhir: 'when the Nineteenth Amendment granted women the right to vote.'"
+  },
+  {
+    id: "i23", pkg: "inten", passageKey: "inten_chocolate", label: "Prosus INTEN • No. 23 (Chocolate Making)",
+    kompetensi: "Pemahaman Inferensial - Topik Teks Eksplanasi", type: "mcq", difficulty: "mudah",
+    question: "The text is about ....",
+    options: {
+      A: "the cacao tree",
+      B: "the cacao beans",
+      C: "the raw chocolate",
+      D: "the making of chocolate",
+      E: "the flavor of chocolate"
+    },
+    answer: "D",
+    explanation: "Teks ini menjelaskan asal-usul cokelat dari pohon kakao hingga tahapan pengolahannya menjadi cokelat cair ('the making of chocolate')."
+  },
+  {
+    id: "i24", pkg: "inten", passageKey: "inten_chocolate", label: "Prosus INTEN • No. 24 (Chocolate Making)",
+    kompetensi: "Pemahaman Inferensial - Fokus Paragraf", type: "mcq", difficulty: "sedang",
+    question: "The third paragraph focuses on ....",
+    options: {
+      A: "the process of producing chocolate",
+      B: "how to produce the cocoa flavor",
+      C: "where chocolate comes from",
+      D: "the chocolate liquor",
+      E: "the cacao fruit"
+    },
+    answer: "A",
+    explanation: "Paragraf ketiga menguraikan tahapan pembuatan cokelat mulai dari fermentasi biji, pengeringan, pemanggangan (roasting), pemisahan kulit (winnowing), hingga penggilingan menjadi cairan cokelat ('the process of producing chocolate')."
+  },
+  {
+    id: "i25", pkg: "inten", passageKey: "inten_chocolate", label: "Prosus INTEN • No. 25 (Chocolate Making)",
+    kompetensi: "Pemahaman Tekstual - Makna Kata dalam Konteks", type: "mcq", difficulty: "sedang",
+    question: "'... so they are often sorted and blended to produce...' (Paragraph 3). The underlined word 'sorted' is closest in meaning to ....",
+    options: {
+      A: "arranged",
+      B: "combined",
+      C: "separated",
+      D: "distributed",
+      E: "organized"
+    },
+    answer: "C",
+    explanation: "Dalam konteks pengolahan biji kakao yang berbeda kualitas dan asalnya, kata 'sorted' (disortir/dipilah) berarti dipisahkan ('separated') menurut jenis/kualitasnya sebelum dicampur ('blended')."
+  },
+  {
+    id: "i26", pkg: "inten", passageKey: "inten_chocolate", label: "Prosus INTEN • No. 26 (Chocolate Making)",
+    kompetensi: "Pemahaman Tekstual - Detail Eksplisit", type: "mcq", difficulty: "mudah",
+    question: "How does the chocolate maker start to make chocolate?",
+    options: {
+      A: "By fermenting the beans.",
+      B: "By roasting the beans.",
+      C: "By blending the beans.",
+      D: "By sorting the beans.",
+      E: "By drying the beans."
+    },
+    answer: "B",
+    explanation: "Pada kalimat kedua paragraf 3 tertulis jelas: 'The chocolate maker starts by roasting the beans to bring out the flavor.' (Fermentasi dan pengeringan dilakukan sebelum dikirim ke pembuat cokelat)."
+  },
+  {
+    id: "i27", pkg: "inten", passageKey: "inten_rayani", label: "Prosus INTEN • No. 27 (Letter to Ms. Susanti)",
+    kompetensi: "Pemahaman Tekstual - Identifikasi Informasi", type: "mcq", difficulty: "mudah",
+    question: "What teacher is Ms. Susanti?",
+    options: {
+      A: "Biology",
+      B: "Geography",
+      C: "Mathematics",
+      D: "History",
+      E: "Pancasila"
+    },
+    answer: "C",
+    explanation: "Rayani menulis surat kepada Ms. Susanti untuk meminta bantuan menghadapi ujian matematika ('upcoming math exam'), sehingga Ms. Susanti adalah guru Matematika."
+  },
+  {
+    id: "i28", pkg: "inten", passageKey: "inten_rayani", label: "Prosus INTEN • No. 28 (Letter to Ms. Susanti)",
+    kompetensi: "Pemahaman Inferensial - Sikap Penulis", type: "mcq", difficulty: "mudah",
+    question: "What does Rayani think of mathematics?",
+    options: {
+      A: "It's easy",
+      B: "It's not easy",
+      C: "It's helpful",
+      D: "It's enjoyable",
+      E: "It's not difficult"
+    },
+    answer: "B",
+    explanation: "Pada paragraf kedua Rayani menulis: 'As you know, math has always been a challenging subject for me, and I have been struggling with it...' yang berarti matematika tidak mudah baginya ('It's not easy')."
+  },
+  {
+    id: "i29", pkg: "inten", passageKey: "inten_rayani", label: "Prosus INTEN • No. 29 (Letter to Ms. Susanti)",
+    kompetensi: "Pemahaman Tekstual - Tujuan Penulisan Surat", type: "mcq", difficulty: "mudah",
+    question: "Rayani writes Ms. Susanti a letter because she wants her teacher ....",
+    options: {
+      A: "to tell her",
+      B: "to give her some extra help and guidance",
+      C: "to buy her math books",
+      D: "to be friendlier to her",
+      E: "to be kind to all students"
+    },
+    answer: "B",
+    explanation: "Pada paragraf ketiga tertulis jelas: 'I am wondering if you could give me some extra help or guidance to prepare for the exam.'"
+  },
+  {
+    id: "i30", pkg: "inten", passageKey: "inten_rayani", label: "Prosus INTEN • No. 30 (Letter to Ms. Susanti)",
+    kompetensi: "Evaluasi dan Apresiasi - Pesan Moral", type: "mcq", difficulty: "sedang",
+    question: "What is the moral lesson that we learn from Rayani?",
+    options: {
+      A: "Even if mathematics is challenging for students, they should not give up",
+      B: "Ms. Susanti is Rayani's math teacher",
+      C: "Rayani enjoys going places",
+      D: "Rayani tells her teacher about her childhood",
+      E: "Rayani prefers music to dance"
+    },
+    answer: "A",
+    explanation: "Meskipun merasa kesulitan dalam pelajaran matematika, Rayani tetap bekerja keras belajar dan berinisiatif meminta bimbingan tambahan kepada gurunya tanpa menyerah (A)."
+  },
+
+  // ==================== LATIHAN TKA BAHASA INGGRIS (WAJIB) - PILIHAN 1 (30 SOAL) ====================
+  {
+    "id": "p1_1",
+    "pkg": "pilihan1",
+    "passageKey": "p1_rooftop",
+    "label": "Pilihan 1 • No. 1 (Rooftop Gardens)",
+    "kompetensi": "Pemahaman Tekstual - Evaluasi Fakta Teks",
+    "type": "tf",
+    "difficulty": "mudah",
+    "col1": "YES",
+    "col2": "NO",
+    "question": "Based on the text, decide whether each statement is YES or NO.",
+    "statements": [
+      {
+        "text": "Rooftop gardens can help keep the top floors cooler.",
+        "answer": "YES",
+        "explanation": "Sesuai isi teks: 'the plants absorb heat, so the top floors of the building stay cooler in summer.'"
+      },
+      {
+        "text": "Every building can have a rooftop garden.",
+        "answer": "NO",
+        "explanation": "Teks menyatakan: 'However, a rooftop garden needs a strong roof, a good drainage system, and regular care, so not every building is suitable.'"
+      },
+      {
+        "text": "Plants on roofs reduce the amount of rainwater flowing into the streets.",
+        "answer": "YES",
+        "explanation": "Sesuai isi teks: 'Rainwater is also caught by the soil and the plants, which reduces the amount of water flowing into the streets during a storm.'"
+      }
+    ]
+  },
+
+  {
+    "id": "p1_2",
+    "pkg": "pilihan1",
+    "passageKey": "p1_library",
+    "label": "Pilihan 1 • No. 2 (Library Reading Challenge)",
+    "kompetensi": "Pemahaman Tekstual - Tujuan Komunikatif Teks",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "What is the main purpose of the text?",
+    "options": {
+      "A": "To sell books at a discount",
+      "B": "To ask students to return library books",
+      "C": "To announce a reading competition for students",
+      "D": "To advertise a new library",
+      "E": "To invite parents to a meeting"
+    },
+    "answer": "C",
+    "explanation": "Teks tersebut mengumumkan kegiatan '30-Day Reading Challenge' untuk seluruh siswa di perpustakaan Harapan High School dengan hadiah voucher buku."
+  },
+
+  {
+    "id": "p1_3",
+    "pkg": "pilihan1",
+    "passageKey": "p1_library",
+    "label": "Pilihan 1 • No. 3 (Library Reading Challenge)",
+    "kompetensi": "Pemahaman Tekstual - Menemukan Informasi Rinci",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "Which students will get extra points?",
+    "options": {
+      "A": "Those who submit their reviews early",
+      "B": "Those who read books in English",
+      "C": "Those who write more than 100 words",
+      "D": "Those who visit the library every day",
+      "E": "Those who help Ms. Rina"
+    },
+    "answer": "B",
+    "explanation": "Paragraf kedua menyatakan secara eksplisit: 'Students who read books in English will get extra points.'"
+  },
+
+  {
+    "id": "p1_4",
+    "pkg": "pilihan1",
+    "passageKey": "p1_library",
+    "label": "Pilihan 1 • No. 4 (Library Reading Challenge)",
+    "kompetensi": "Pemahaman Tekstual - Makna Kata dalam Konteks",
+    "type": "mcq",
+    "difficulty": "sedang",
+    "question": "'Reviews should be submitted to the librarian ...' The underlined word is closest in meaning to ....",
+    "options": {
+      "A": "thrown away",
+      "B": "corrected",
+      "C": "copied",
+      "D": "handed in",
+      "E": "rewritten"
+    },
+    "answer": "D",
+    "explanation": "Kata 'submitted' bermakna diserahkan atau dikumpulkan, sehingga bersinonim dengan 'handed in'."
+  },
+
+  {
+    "id": "p1_5",
+    "pkg": "pilihan1",
+    "passageKey": "p1_ebikes",
+    "label": "Pilihan 1 • No. 5 (Electric Bicycles)",
+    "kompetensi": "Pemahaman Inferensial - Verifikasi Informasi Teks",
+    "type": "mcqk",
+    "difficulty": "sulit",
+    "question": "Which statements are mentioned in the text?\\n(There is more than one correct answer. Click on the blank space on the left side of every correct answer!)",
+    "options": {
+      "A": "E-bikes do not need fuel.",
+      "B": "E-bikes are cheaper than all other vehicles.",
+      "C": "Riders are advised to wear helmets.",
+      "D": "E-bikes can only be used on flat roads.",
+      "E": "Parking is easy for e-bike riders."
+    },
+    "answers": [
+      "A",
+      "C",
+      "E"
+    ],
+    "explanation": "Pernyataan yang sesuai isi teks: e-bike tidak butuh bahan bakar (A), pengendara disarankan memakai helm (C), dan parkir mudah bagi pengguna e-bike (E)."
+  },
+
+  {
+    "id": "p1_6",
+    "pkg": "pilihan1",
+    "passageKey": "p1_honeybee",
+    "label": "Pilihan 1 • No. 6 (The Honeybee Dance)",
+    "kompetensi": "Pemahaman Inferensial - Gagasan Utama Teks",
+    "type": "mcq",
+    "difficulty": "sedang",
+    "question": "What is the text mainly about?",
+    "options": {
+      "A": "How honeybees use a dance to share the location of food",
+      "B": "Why honeybees make honey",
+      "C": "How bees protect the hive",
+      "D": "The life cycle of honeybees",
+      "E": "Why flowers attract bees"
+    },
+    "answer": "A",
+    "explanation": "Teks secara garis besar membahas bagaimana lebah madu menggunakan tarian (waggle dance) untuk menyampaikan lokasi dan jarak sumber makanan kepada kawanannya."
+  },
+
+  {
+    "id": "p1_7",
+    "pkg": "pilihan1",
+    "passageKey": "p1_honeybee",
+    "label": "Pilihan 1 • No. 7 (The Honeybee Dance)",
+    "kompetensi": "Pemahaman Tekstual - Menemukan Informasi Eksplisit",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "What does the length of the waggle show?",
+    "options": {
+      "A": "The direction of the sun",
+      "B": "The distance to the flowers",
+      "C": "The number of bees needed",
+      "D": "The type of flowers",
+      "E": "The time of day"
+    },
+    "answer": "B",
+    "explanation": "Paragraf kedua menyebutkan: 'the length of the waggle shows how far away they are. The longer the waggle, the farther the food' (jarak ke bunga)."
+  },
+
+  {
+    "id": "p1_8",
+    "pkg": "pilihan1",
+    "passageKey": "p1_honeybee",
+    "label": "Pilihan 1 • No. 8 (The Honeybee Dance)",
+    "kompetensi": "Pemahaman Tekstual - Kosakata dalam Konteks",
+    "type": "mcq",
+    "difficulty": "sedang",
+    "question": "The word 'scarce' in paragraph 3 is closest in meaning to ....",
+    "options": {
+      "A": "abundant",
+      "B": "colorful",
+      "C": "rare",
+      "D": "dangerous",
+      "E": "fragrant"
+    },
+    "answer": "C",
+    "explanation": "Kata 'scarce' bermakna langka atau jarang ditemukan, bersinonim dengan 'rare'."
+  },
+
+  {
+    "id": "p1_9",
+    "pkg": "pilihan1",
+    "passageKey": "p1_honeybee",
+    "label": "Pilihan 1 • No. 9 (The Honeybee Dance)",
+    "kompetensi": "Pemahaman Tekstual - Rujukan Kata (Pronoun Reference)",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "'After learning the message, they fly out to find the flowers.' (paragraph 3). The word 'they' refers to ....",
+    "options": {
+      "A": "Scientists",
+      "B": "Flowers",
+      "C": "The dancer",
+      "D": "Worker bees returning to the hive",
+      "E": "Other bees"
+    },
+    "answer": "E",
+    "explanation": "Kalimat sebelumnya menyatakan: 'Other bees gather around the dancer and follow her movements closely. After learning the message, they fly out...' sehingga kata 'they' merujuk ke 'Other bees'."
+  },
+
+  {
+    "id": "p1_10",
+    "pkg": "pilihan1",
+    "passageKey": "p1_honeybee",
+    "label": "Pilihan 1 • No. 10 (The Honeybee Dance)",
+    "kompetensi": "Pemahaman Inferensial - Menarik Kesimpulan Implisit",
+    "type": "mcq",
+    "difficulty": "sulit",
+    "question": "Which statement can be inferred from the text?",
+    "options": {
+      "A": "Honeybees dance only when it rains.",
+      "B": "Bees rarely leave the hive.",
+      "C": "Only scientists can understand the dance.",
+      "D": "The colony would probably find food less efficiently without the dance.",
+      "E": "The dance is performed outside the hive."
+    },
+    "answer": "D",
+    "explanation": "Di akhir teks tertulis: 'Scientists believe this system helps the colony collect food efficiently...', sehingga dapat disimpulkan tanpa tarian ini koloni lebah akan mengumpulkan makanan dengan kurang efisien (D)."
+  },
+
+  {
+    "id": "p1_11",
+    "pkg": "pilihan1",
+    "passageKey": "p1_violin",
+    "label": "Pilihan 1 • No. 11 (The Lost Violin)",
+    "kompetensi": "Pemahaman Inferensial - Mengidentifikasi Perasaan Tokoh",
+    "type": "mcq",
+    "difficulty": "sedang",
+    "question": "How did Dina feel at the beginning of the story?",
+    "options": {
+      "A": "bored",
+      "B": "angry",
+      "C": "anxious",
+      "D": "proud",
+      "E": "sleepy"
+    },
+    "answer": "C",
+    "explanation": "Di awal cerita tertulis: 'her hands cold and trembling' karena biolanya hilang sesaat sebelum tampil, mencerminkan perasaan cemas (anxious)."
+  },
+
+  {
+    "id": "p1_12",
+    "pkg": "pilihan1",
+    "passageKey": "p1_violin",
+    "label": "Pilihan 1 • No. 12 (The Lost Violin)",
+    "kompetensi": "Pemahaman Tekstual - Sebab-Akibat Peristiwa",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "Why did Dina sigh with relief?",
+    "options": {
+      "A": "She had won the contest.",
+      "B": "She found that her violin was safe.",
+      "C": "Raka had bought her a new violin.",
+      "D": "The festival was canceled.",
+      "E": "Her grandmother arrived."
+    },
+    "answer": "B",
+    "explanation": "Dina merasa lega karena melihat biolanya berada di dalam kotak dengan aman ('Her violin lay safely inside')."
+  },
+
+  {
+    "id": "p1_13",
+    "pkg": "pilihan1",
+    "passageKey": "p1_violin",
+    "label": "Pilihan 1 • No. 13 (The Lost Violin)",
+    "kompetensi": "Pemahaman Tekstual - Kosakata Naratif",
+    "type": "mcq",
+    "difficulty": "sedang",
+    "question": "The word 'panted' is closest in meaning to ....",
+    "options": {
+      "A": "shouted angrily",
+      "B": "laughed loudly",
+      "C": "whispered",
+      "D": "cried",
+      "E": "breathed quickly"
+    },
+    "answer": "E",
+    "explanation": "Kata 'panted' berarti bernapas terengah-engah atau cepat karena kelelahan berlari ('breathed quickly')."
+  },
+
+  {
+    "id": "p1_14",
+    "pkg": "pilihan1",
+    "passageKey": "p1_coral",
+    "label": "Pilihan 1 • No. 14 (Coral Reefs)",
+    "kompetensi": "Pemahaman Tekstual - Evaluasi Informasi Teks Eksplanasi",
+    "type": "tf",
+    "difficulty": "sedang",
+    "col1": "YES",
+    "col2": "NO",
+    "question": "Based on the text, decide whether each statement is YES or NO.",
+    "statements": [
+      {
+        "text": "Coral reefs cover a large part of the ocean floor.",
+        "answer": "NO",
+        "explanation": "Teks menyatakan terumbu karang menutupi kurang dari 1% dasar laut ('cover less than one percent of the ocean floor')."
+      },
+      {
+        "text": "Bleached corals can still recover if the water cools down.",
+        "answer": "YES",
+        "explanation": "Teks menyebutkan: 'Bleached corals are not dead, but they are weak and may die if the water does not cool down soon' (karang dapat pulih jika air segera dingin kembali)."
+      },
+      {
+        "text": "Corals live in colonies.",
+        "answer": "YES",
+        "explanation": "Sesuai isi teks: 'Corals are tiny animals that live in colonies'."
+      }
+    ]
+  },
+
+  {
+    "id": "p1_15",
+    "pkg": "pilihan1",
+    "passageKey": "p1_coral",
+    "label": "Pilihan 1 • No. 15 (Coral Reefs)",
+    "kompetensi": "Pemahaman Tekstual - Pengecualian Informasi Teks",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "Which of the following is NOT mentioned as a threat to coral reefs?",
+    "options": {
+      "A": "Warm water",
+      "B": "Pollution",
+      "C": "Careless fishing",
+      "D": "Strong waves",
+      "E": "Climate change"
+    },
+    "answer": "D",
+    "explanation": "Teks menyebutkan air hangat/perubahan iklim, polusi, dan penangkapan ikan ceroboh. Gelombang kuat ('Strong waves') tidak disebutkan sebagai ancaman."
+  },
+
+  {
+    "id": "p1_16",
+    "pkg": "pilihan1",
+    "passageKey": "p1_curie",
+    "label": "Pilihan 1 • No. 16 (Marie Curie)",
+    "kompetensi": "Pemahaman Tekstual - Topik Utama Biografi",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "What is the text mainly about?",
+    "options": {
+      "A": "The history of Poland",
+      "B": "How X-ray machines work",
+      "C": "The Nobel Prize system",
+      "D": "The life and achievements of Marie Curie",
+      "E": "The discovery of electricity"
+    },
+    "answer": "D",
+    "explanation": "Teks menguraikan riwayat hidup, penelitian ilmiah, dan berbagai pencapaian penting Marie Curie."
+  },
+
+  {
+    "id": "p1_17",
+    "pkg": "pilihan1",
+    "passageKey": "p1_curie",
+    "label": "Pilihan 1 • No. 17 (Marie Curie)",
+    "kompetensi": "Pemahaman Tekstual - Informasi Faktual",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "Where did Marie Curie study physics and mathematics?",
+    "options": {
+      "A": "Warsaw",
+      "B": "London",
+      "C": "Paris",
+      "D": "Berlin",
+      "E": "Oslo"
+    },
+    "answer": "C",
+    "explanation": "Paragraf pertama menyatakan: 'she moved to Paris to study physics and mathematics at the Sorbonne.'"
+  },
+
+  {
+    "id": "p1_18",
+    "pkg": "pilihan1",
+    "passageKey": "p1_curie",
+    "label": "Pilihan 1 • No. 18 (Marie Curie)",
+    "kompetensi": "Pemahaman Tekstual - Makna Kosakata Ilmiah",
+    "type": "mcq",
+    "difficulty": "sedang",
+    "question": "The word 'introduced' in paragraph 1 is closest in meaning to ....",
+    "options": {
+      "A": "forgot",
+      "B": "first brought into use",
+      "C": "sold",
+      "D": "removed",
+      "E": "copied"
+    },
+    "answer": "B",
+    "explanation": "Dalam konteks memperkenalkan istilah baru ('radioactivity'), 'introduced' bermakna pertama kali digunakan dalam sains ('first brought into use')."
+  },
+
+  {
+    "id": "p1_19",
+    "pkg": "pilihan1",
+    "passageKey": "p1_curie",
+    "label": "Pilihan 1 • No. 19 (Marie Curie)",
+    "kompetensi": "Evaluasi dan Apresiasi - Verifikasi Fakta Sejarah",
+    "type": "mcqk",
+    "difficulty": "sulit",
+    "question": "Which statements are TRUE according to the text?\\n(There is more than one correct answer. Click on the blank space on the left side of every correct answer!)",
+    "options": {
+      "A": "Marie Curie discovered polonium and radium with her husband.",
+      "B": "She won two Nobel Prizes.",
+      "C": "Her first Nobel Prize was in Chemistry.",
+      "D": "She studied only in Warsaw.",
+      "E": "She helped develop mobile X-ray units."
+    },
+    "answers": [
+      "A",
+      "B",
+      "E"
+    ],
+    "explanation": "Fakta yang benar: menemukan polonium dan radium bersama suaminya (A), memenangkan 2 Hadiah Nobel (B), dan membantu pengembangan unit X-ray bergerak (E). Opsi C salah karena Nobel pertamanya di bidang Fisika (1903)."
+  },
+
+  {
+    "id": "p1_20",
+    "pkg": "pilihan1",
+    "passageKey": "p1_intern_nadia",
+    "label": "Pilihan 1 • No. 20 (Application Letter)",
+    "kompetensi": "Pemahaman Tekstual - Informasi Rinci Surat Resmi",
+    "type": "mcqk",
+    "difficulty": "mudah",
+    "question": "Which of the following are mentioned in the letter?\\n(There is more than one correct answer. Click on the blank space on the left side of every correct answer!)",
+    "options": {
+      "A": "Nadia is a Grade 12 student.",
+      "B": "She wants an internship in December.",
+      "C": "She is interested in accounting.",
+      "D": "She attached her portfolio.",
+      "E": "She can only work on weekends."
+    },
+    "answers": [
+      "A",
+      "B",
+      "D"
+    ],
+    "explanation": "Poin yang disebutkan dalam surat: Nadia murid kelas 12 (A), menginginkan magang liburan Desember (B), dan melampirkan portofolio (D)."
+  },
+
+  {
+    "id": "p1_21",
+    "pkg": "pilihan1",
+    "passageKey": "p1_intern_nadia",
+    "label": "Pilihan 1 • No. 21 (Application Letter)",
+    "kompetensi": "Pemahaman Tekstual - Tujuan Komunikatif Surat",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "Why does Nadia write the letter?",
+    "options": {
+      "A": "To apply for a scholarship",
+      "B": "To complain about a design",
+      "C": "To invite Mr. Hadi to school",
+      "D": "To thank her art teacher",
+      "E": "To ask about an internship"
+    },
+    "answer": "E",
+    "explanation": "Tujuan surat adalah menanyakan apakah perusahaan membuka kesempatan magang bagi siswa ('To ask about an internship')."
+  },
+
+  {
+    "id": "p1_22",
+    "pkg": "pilihan1",
+    "passageKey": "p1_intern_nadia",
+    "label": "Pilihan 1 • No. 22 (Application Letter)",
+    "kompetensi": "Pemahaman Tekstual - Makna Kosakata Korespondensi",
+    "type": "mcq",
+    "difficulty": "sedang",
+    "question": "'I have attached my portfolio ...' The underlined word is closest in meaning to ....",
+    "options": {
+      "A": "removed",
+      "B": "damaged",
+      "C": "included with the letter",
+      "D": "copied",
+      "E": "forgotten"
+    },
+    "answer": "C",
+    "explanation": "Kata 'attached' bermakna dilampirkan atau disertakan bersama surat ('included with the letter')."
+  },
+
+  {
+    "id": "p1_23",
+    "pkg": "pilihan1",
+    "passageKey": "p1_school_start",
+    "label": "Pilihan 1 • No. 23 (Should Schools Start Later?)",
+    "kompetensi": "Pemahaman Inferensial - Pokok Permasalahan Teks Diskusi",
+    "type": "mcq",
+    "difficulty": "sedang",
+    "question": "What does the text mainly discuss?",
+    "options": {
+      "A": "The danger of using phones",
+      "B": "A debate about starting school later",
+      "C": "How to organize sports practice",
+      "D": "Teachers' salaries",
+      "E": "Parents' working hours"
+    },
+    "answer": "B",
+    "explanation": "Teks membahas perdebatan mengenai usulan memundurkan jam mulai masuk sekolah ('A debate about starting school later')."
+  },
+
+  {
+    "id": "p1_24",
+    "pkg": "pilihan1",
+    "passageKey": "p1_school_start",
+    "label": "Pilihan 1 • No. 24 (Should Schools Start Later?)",
+    "kompetensi": "Pemahaman Tekstual - Argumen Pendukung",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "According to the supporters, why should school start later?",
+    "options": {
+      "A": "Teachers prefer later hours.",
+      "B": "Buses are cheaper in the morning.",
+      "C": "Students dislike sports.",
+      "D": "Teenagers' body clocks make them fall asleep later at night.",
+      "E": "Parents want more free time."
+    },
+    "answer": "D",
+    "explanation": "Pendukung menyatakan jam tubuh biologis remaja membuat mereka tidur lebih larut di malam hari sehingga perlu bangun lebih siang (D)."
+  },
+
+  {
+    "id": "p1_25",
+    "pkg": "pilihan1",
+    "passageKey": "p1_school_start",
+    "label": "Pilihan 1 • No. 25 (Should Schools Start Later?)",
+    "kompetensi": "Pemahaman Tekstual - Argumen Penentang",
+    "type": "mcq",
+    "difficulty": "sedang",
+    "question": "Which of the following is an argument of the opponents?",
+    "options": {
+      "A": "Students will be absent more often.",
+      "B": "Teenagers need less sleep.",
+      "C": "Later finishing times can disturb sports practice and after-school jobs.",
+      "D": "Schools will lose money.",
+      "E": "Teachers will have fewer holidays."
+    },
+    "answer": "C",
+    "explanation": "Pihak yang menentang beralasan jam pulang yang lebih sore dapat mengganggu latihan olahraga dan pekerjaan sampingan siswa (C)."
+  },
+
+  {
+    "id": "p1_26",
+    "pkg": "pilihan1",
+    "passageKey": "p1_school_start",
+    "label": "Pilihan 1 • No. 26 (Should Schools Start Later?)",
+    "kompetensi": "Evaluasi dan Apresiasi - Kelayakan Argumen Teks",
+    "type": "tf",
+    "difficulty": "sedang",
+    "col1": "YES",
+    "col2": "NO",
+    "question": "Based on the text, decide whether each statement is YES or NO.",
+    "statements": [
+      {
+        "text": "Supporters say later start times can reduce absences.",
+        "answer": "YES",
+        "explanation": "Sesuai paragraf 2: 'students who started class later reported being less tired and were absent less often'."
+      },
+      {
+        "text": "Opponents think teachers should start work later.",
+        "answer": "NO",
+        "explanation": "Teks tidak menyebutkan bahwa pihak penentang menginginkan guru mulai kerja lebih lambat."
+      },
+      {
+        "text": "The writer suggests trying the change for one semester.",
+        "answer": "YES",
+        "explanation": "Sesuai paragraf penutup: 'Perhaps the best solution is to try the change for one semester and then evaluate the results'."
+      }
+    ]
+  },
+
+  {
+    "id": "p1_27",
+    "pkg": "pilihan1",
+    "passageKey": "p1_compost",
+    "label": "Pilihan 1 • No. 27 (How to Make a Simple Compost Bin)",
+    "kompetensi": "Pemahaman Tekstual - Tujuan Teks Prosedur",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "What is the purpose of the text?",
+    "options": {
+      "A": "To describe a garden",
+      "B": "To explain how to make a compost bin",
+      "C": "To persuade people to stop eating meat",
+      "D": "To tell a story",
+      "E": "To report news"
+    },
+    "answer": "B",
+    "explanation": "Teks ini bertujuan menjelaskan prosedur pembuatan kotak kompos sederhana ('explain how to make a compost bin')."
+  },
+
+  {
+    "id": "p1_28",
+    "pkg": "pilihan1",
+    "passageKey": "p1_compost",
+    "label": "Pilihan 1 • No. 28 (How to Make a Simple Compost Bin)",
+    "kompetensi": "Pemahaman Tekstual - Urutan Langkah Kerja",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "What should you do right after putting the layer of dry leaves at the bottom?",
+    "options": {
+      "A": "Stir the mixture",
+      "B": "Drill small holes",
+      "C": "Add meat",
+      "D": "Add fruit and vegetable scraps",
+      "E": "Use the compost"
+    },
+    "answer": "D",
+    "explanation": "Teks menyatakan: 'Next, put a layer of dry leaves or torn paper at the bottom. Then add fruit and vegetable scraps...'"
+  },
+
+  {
+    "id": "p1_29",
+    "pkg": "pilihan1",
+    "passageKey": "p1_compost",
+    "label": "Pilihan 1 • No. 29 (How to Make a Simple Compost Bin)",
+    "kompetensi": "Pemahaman Tekstual - Alasan Larangan Prosedur",
+    "type": "mcq",
+    "difficulty": "sedang",
+    "question": "Why should meat, oil, and dairy products NOT be added?",
+    "options": {
+      "A": "They make the compost too dry.",
+      "B": "They are expensive.",
+      "C": "They stop air from passing through.",
+      "D": "They turn the leaves white.",
+      "E": "They attract animals and cause a bad smell."
+    },
+    "answer": "E",
+    "explanation": "Teks menjelaskan secara eksplisit: 'Do not add meat, oil, or dairy products because they attract animals and cause a bad smell.'"
+  },
+
+  {
+    "id": "p1_30",
+    "pkg": "pilihan1",
+    "passageKey": "p1_compost",
+    "label": "Pilihan 1 • No. 30 (How to Make a Simple Compost Bin)",
+    "kompetensi": "Pemahaman Tekstual - Sinonim Kosakata Keterangan",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "'... keep it slightly moist.' The underlined word is closest in meaning to ....",
+    "options": {
+      "A": "dry",
+      "B": "slightly wet",
+      "C": "hot",
+      "D": "covered",
+      "E": "frozen"
+    },
+    "answer": "B",
+    "explanation": "Kata 'moist' berarti lembap atau agak basah ('slightly wet')."
+  },
+
+  // ==================== LATIHAN TKA BAHASA INGGRIS (WAJIB) - PILIHAN 2 (30 SOAL) ====================
+  {
+    "id": "p2_1",
+    "pkg": "pilihan2",
+    "passageKey": "p2_plastic",
+    "label": "Pilihan 2 • No. 1 (Plastic Bag Fee)",
+    "kompetensi": "Pemahaman Tekstual - Verifikasi Kebijakan Lingkungan",
+    "type": "tf",
+    "difficulty": "mudah",
+    "col1": "YES",
+    "col2": "NO",
+    "question": "Based on the text, decide whether each statement is YES or NO.",
+    "statements": [
+      {
+        "text": "The fee applies to all shops in the city.",
+        "answer": "NO",
+        "explanation": "Teks menyatakan: 'the fee does not apply to small markets and street vendors'."
+      },
+      {
+        "text": "Fewer plastic bags are being given out in supermarkets.",
+        "answer": "YES",
+        "explanation": "Sesuai isi teks: 'the number of bags handed out has dropped sharply'."
+      },
+      {
+        "text": "Officials intend to expand the rule next year.",
+        "answer": "YES",
+        "explanation": "Sesuai isi teks: 'Officials say they plan to extend the rule to these places next year.'"
+      }
+    ]
+  },
+
+  {
+    "id": "p2_2",
+    "pkg": "pilihan2",
+    "passageKey": "p2_science_fair",
+    "label": "Pilihan 2 • No. 2 (Smart Science Fair)",
+    "kompetensi": "Pemahaman Tekstual - Tujuan Komunikatif Undangan",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "What is the main purpose of the text?",
+    "options": {
+      "A": "To announce a school holiday",
+      "B": "To sell lunch at the canteen",
+      "C": "To advertise a robot",
+      "D": "To invite people to a science fair",
+      "E": "To report the results of a competition"
+    },
+    "answer": "D",
+    "explanation": "Teks ini adalah poster undangan yang mengajak masyarakat menghadiri pameran sains ('To invite people to a science fair')."
+  },
+
+  {
+    "id": "p2_3",
+    "pkg": "pilihan2",
+    "passageKey": "p2_science_fair",
+    "label": "Pilihan 2 • No. 3 (Smart Science Fair)",
+    "kompetensi": "Pemahaman Tekstual - Batas Waktu & Syarat Kehadiran",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "What must visitors do before 10 November?",
+    "options": {
+      "A": "Pay the entrance fee",
+      "B": "Bring their own experiments",
+      "C": "Register online",
+      "D": "Vote for a project",
+      "E": "Contact the canteen"
+    },
+    "answer": "C",
+    "explanation": "Teks menyebutkan: 'visitors must register online before 10 November because the number of seats is limited.'"
+  },
+
+  {
+    "id": "p2_4",
+    "pkg": "pilihan2",
+    "passageKey": "p2_science_fair",
+    "label": "Pilihan 2 • No. 4 (Smart Science Fair)",
+    "kompetensi": "Pemahaman Tekstual - Makna Kata Kontekstual",
+    "type": "mcq",
+    "difficulty": "sedang",
+    "question": "'... because the number of seats is limited.' The underlined word is closest in meaning to ....",
+    "options": {
+      "A": "unlimited",
+      "B": "expensive",
+      "C": "free",
+      "D": "comfortable",
+      "E": "not many"
+    },
+    "answer": "E",
+    "explanation": "Kata 'limited' berarti dibatasi jumlahnya atau tidak banyak ('not many')."
+  },
+
+  {
+    "id": "p2_5",
+    "pkg": "pilihan2",
+    "passageKey": "p2_learning_apps",
+    "label": "Pilihan 2 • No. 5 (Language-Learning Apps)",
+    "kompetensi": "Pemahaman Inferensial - Verifikasi Opini & Fakta",
+    "type": "mcqk",
+    "difficulty": "sulit",
+    "question": "Which statements agree with the text?\\n(There is more than one correct answer. Click on the blank space on the left side of every correct answer!)",
+    "options": {
+      "A": "Users can study with apps in short daily sessions.",
+      "B": "Apps completely replace speaking practice.",
+      "C": "Some apps give rewards for learning every day.",
+      "D": "Teachers recommend listening to natural English.",
+      "E": "Apps are only used at school."
+    },
+    "answers": [
+      "A",
+      "C",
+      "D"
+    ],
+    "explanation": "Pernyataan yang sesuai isi teks: pengguna dapat belajar dalam sesi singkat harian (A), aplikasi memberi reward harian (C), dan guru menyarankan mendengarkan bahasa Inggris alami (D)."
+  },
+
+  {
+    "id": "p2_6",
+    "pkg": "pilihan2",
+    "passageKey": "p2_sea_turtles",
+    "label": "Pilihan 2 • No. 6 (Sea Turtles)",
+    "kompetensi": "Pemahaman Inferensial - Topik Utama Teks Alam",
+    "type": "mcq",
+    "difficulty": "sedang",
+    "question": "What is the text mainly about?",
+    "options": {
+      "A": "How sea turtles catch their food",
+      "B": "The best beaches for tourists",
+      "C": "How sea turtles lay eggs and why their young need protection",
+      "D": "Why the ocean is dangerous",
+      "E": "The history of sea turtle research"
+    },
+    "answer": "C",
+    "explanation": "Teks menguraikan bagaimana penyu laut bertelur di pantai serta pentingnya melindungi tukik yang baru menetas dari ancaman cahaya buatan (C)."
+  },
+
+  {
+    "id": "p2_7",
+    "pkg": "pilihan2",
+    "passageKey": "p2_sea_turtles",
+    "label": "Pilihan 2 • No. 7 (Sea Turtles)",
+    "kompetensi": "Pemahaman Tekstual - Perilaku Hewan Berdasarkan Teks",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "What does a mother turtle do after covering the nest?",
+    "options": {
+      "A": "Stays to protect the eggs",
+      "B": "Returns to the sea",
+      "C": "Digs another hole",
+      "D": "Looks for food on the beach",
+      "E": "Waits until the eggs hatch"
+    },
+    "answer": "B",
+    "explanation": "Paragraf kedua menyebutkan: 'She then covers the nest with sand and returns to the sea. She does not stay to protect the eggs.'"
+  },
+
+  {
+    "id": "p2_8",
+    "pkg": "pilihan2",
+    "passageKey": "p2_sea_turtles",
+    "label": "Pilihan 2 • No. 8 (Sea Turtles)",
+    "kompetensi": "Pemahaman Tekstual - Sinonim Kosakata Biologi",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "The word 'hatch' in paragraph 3 is closest in meaning to ....",
+    "options": {
+      "A": "disappear",
+      "B": "grow bigger",
+      "C": "come out of eggs",
+      "D": "dig a hole",
+      "E": "lay eggs"
+    },
+    "answer": "C",
+    "explanation": "Kata 'hatch' berarti menetas, yaitu bayi hewan keluar dari telurnya ('come out of eggs')."
+  },
+
+  {
+    "id": "p2_9",
+    "pkg": "pilihan2",
+    "passageKey": "p2_sea_turtles",
+    "label": "Pilihan 2 • No. 9 (Sea Turtles)",
+    "kompetensi": "Pemahaman Tekstual - Sebab-Akibat Fenomena Alam",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "Why do many baby turtles head in the wrong direction?",
+    "options": {
+      "A": "The moon disappears.",
+      "B": "They are born blind.",
+      "C": "Their mother leads them away.",
+      "D": "Bright lights from hotels and roads confuse them.",
+      "E": "The water is too cold."
+    },
+    "answer": "D",
+    "explanation": "Teks menyatakan: 'Sadly, bright lights from hotels and roads can confuse them, and many head in the wrong direction.'"
+  },
+
+  {
+    "id": "p2_10",
+    "pkg": "pilihan2",
+    "passageKey": "p2_sea_turtles",
+    "label": "Pilihan 2 • No. 10 (Sea Turtles)",
+    "kompetensi": "Evaluasi dan Apresiasi - Menilai Kesimpulan Logis",
+    "type": "mcq",
+    "difficulty": "sulit",
+    "question": "Which conclusion is supported by the text?",
+    "options": {
+      "A": "Mother turtles guard nests for two months.",
+      "B": "Turning off beach lights at night can help more baby turtles reach the sea.",
+      "C": "Most hatchlings reach adulthood.",
+      "D": "Sea turtles never return to the beach where they were born.",
+      "E": "Conservation groups want hotels closed."
+    },
+    "answer": "B",
+    "explanation": "Karena cahaya lampu malam menyesatkan tukik, mematikan lampu pantai di malam hari akan membantu lebih banyak bayi penyu menemukan arah laut (B)."
+  },
+
+  {
+    "id": "p2_11",
+    "pkg": "pilihan2",
+    "passageKey": "p2_night_market",
+    "label": "Pilihan 2 • No. 11 (The Night Market)",
+    "kompetensi": "Pemahaman Tekstual - Konflik Utama Cerita",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "What problem did Bayu face?",
+    "options": {
+      "A": "He lost his money.",
+      "B": "He lost sight of his sister in the crowd.",
+      "C": "He missed the street performance.",
+      "D": "He forgot to buy corn.",
+      "E": "He arrived late."
+    },
+    "answer": "B",
+    "explanation": "Masalah utama Bayu adalah Salsa terlepas dari genggamannya dan hilang di kerumunan pasar malam ('He lost sight of his sister in the crowd')."
+  },
+
+  {
+    "id": "p2_12",
+    "pkg": "pilihan2",
+    "passageKey": "p2_night_market",
+    "label": "Pilihan 2 • No. 12 (The Night Market)",
+    "kompetensi": "Pemahaman Inferensial - Suasana Batin Tokoh",
+    "type": "mcq",
+    "difficulty": "sedang",
+    "question": "How did Bayu feel when Salsa disappeared?",
+    "options": {
+      "A": "proud",
+      "B": "bored",
+      "C": "worried",
+      "D": "jealous",
+      "E": "relaxed"
+    },
+    "answer": "C",
+    "explanation": "Kalimat 'His heart pounded. He pushed through the crowd, calling her name again and again' menunjukkan Bayu merasa sangat panik dan cemas (worried)."
+  },
+
+  {
+    "id": "p2_13",
+    "pkg": "pilihan2",
+    "passageKey": "p2_night_market",
+    "label": "Pilihan 2 • No. 13 (The Night Market)",
+    "kompetensi": "Pemahaman Inferensial - Deskripsi Latar Suasana",
+    "type": "mcq",
+    "difficulty": "sedang",
+    "question": "Which words best describe the atmosphere at the beginning of the story?",
+    "options": {
+      "A": "quiet and gloomy",
+      "B": "cold and lonely",
+      "C": "dangerous and dark",
+      "D": "lively and colorful",
+      "E": "tense and silent"
+    },
+    "answer": "D",
+    "explanation": "Suasana pembuka cerita penuh dengan lampu gantung warna-warni, kerumunan ramai, dan aroma lezat jagung bakar serta kue, yang mencerminkan suasana 'lively and colorful'."
+  },
+
+  {
+    "id": "p2_14",
+    "pkg": "pilihan2",
+    "passageKey": "p2_bamboo",
+    "label": "Pilihan 2 • No. 14 (Bamboo)",
+    "kompetensi": "Pemahaman Tekstual - Fakta Ilmiah Tumbuhan",
+    "type": "tf",
+    "difficulty": "mudah",
+    "col1": "YES",
+    "col2": "NO",
+    "question": "Based on the text, decide whether each statement is YES or NO.",
+    "statements": [
+      {
+        "text": "Bamboo can spread too much if it is not controlled.",
+        "answer": "YES",
+        "explanation": "Sesuai kalimat terakhir: 'bamboo can spread quickly and take over land if it is not managed carefully'."
+      },
+      {
+        "text": "Bamboo is a kind of tree.",
+        "answer": "NO",
+        "explanation": "Kalimat pertama secara tegas menyatakan: 'Bamboo is a grass, not a tree'."
+      },
+      {
+        "text": "Some bamboo can grow almost one meter in a day.",
+        "answer": "YES",
+        "explanation": "Sesuai isi teks: 'Some species can grow almost one meter in a single day'."
+      }
+    ]
+  },
+
+  {
+    "id": "p2_15",
+    "pkg": "pilihan2",
+    "passageKey": "p2_bamboo",
+    "label": "Pilihan 2 • No. 15 (Bamboo)",
+    "kompetensi": "Pemahaman Tekstual - Identifikasi Pengecualian",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "Which of the following is NOT a use of bamboo mentioned in the text?",
+    "options": {
+      "A": "Furniture",
+      "B": "Baskets",
+      "C": "Houses",
+      "D": "Fabrics",
+      "E": "Cars"
+    },
+    "answer": "E",
+    "explanation": "Teks menyebutkan pemanfaatan bambu untuk rumah, perabot, keranjang, dan kain tenun. Mobil ('Cars') tidak disebutkan."
+  },
+
+  {
+    "id": "p2_16",
+    "pkg": "pilihan2",
+    "passageKey": "p2_kartini",
+    "label": "Pilihan 2 • No. 16 (Raden Ajeng Kartini)",
+    "kompetensi": "Pemahaman Tekstual - Gagasan Utama Biografi",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "What is the text mainly about?",
+    "options": {
+      "A": "The history of the Netherlands",
+      "B": "How magazines were printed",
+      "C": "Kartini's struggle for girls' education and her legacy",
+      "D": "The life of a Javanese king",
+      "E": "Letters written by Dutch friends"
+    },
+    "answer": "C",
+    "explanation": "Teks mengangkat kisah perjuangan R.A. Kartini dalam memperjuangkan hak pendidikan anak perempuan serta warisan perjuangannya bagi Indonesia."
+  },
+
+  {
+    "id": "p2_17",
+    "pkg": "pilihan2",
+    "passageKey": "p2_kartini",
+    "label": "Pilihan 2 • No. 17 (Raden Ajeng Kartini)",
+    "kompetensi": "Pemahaman Tekstual - Motif Tindakan Tokoh",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "Why did Kartini write letters to friends in the Netherlands?",
+    "options": {
+      "A": "To ask for money",
+      "B": "To share her wish that girls could receive an education",
+      "C": "To invite them to Jepara",
+      "D": "To sell her books",
+      "E": "To complain about her school"
+    },
+    "answer": "B",
+    "explanation": "Teks menyatakan: 'wrote letters to friends in the Netherlands, in which she shared her wish that girls could receive a good education.'"
+  },
+
+  {
+    "id": "p2_18",
+    "pkg": "pilihan2",
+    "passageKey": "p2_kartini",
+    "label": "Pilihan 2 • No. 18 (Raden Ajeng Kartini)",
+    "kompetensi": "Pemahaman Tekstual - Sinonim Kata Sikap",
+    "type": "mcq",
+    "difficulty": "sedang",
+    "question": "The word 'inspired' in paragraph 2 is closest in meaning to ....",
+    "options": {
+      "A": "discouraged",
+      "B": "confused",
+      "C": "bored",
+      "D": "frightened",
+      "E": "motivated"
+    },
+    "answer": "E",
+    "explanation": "Kata 'inspired' berarti mengilhami dan memotivasi banyak orang ('motivated')."
+  },
+
+  {
+    "id": "p2_19",
+    "pkg": "pilihan2",
+    "passageKey": "p2_kartini",
+    "label": "Pilihan 2 • No. 19 (Raden Ajeng Kartini)",
+    "kompetensi": "Evaluasi dan Apresiasi - Kronologi Fakta Sejarah",
+    "type": "mcqk",
+    "difficulty": "sulit",
+    "question": "Which statements are TRUE according to the text?\\n(There is more than one correct answer. Click on the blank space on the left side of every correct answer!)",
+    "options": {
+      "A": "Kartini was born into a noble family.",
+      "B": "Kartini opened a small school for girls.",
+      "C": "Kartini lived to be 50 years old.",
+      "D": "Kartini's letters were published after her death.",
+      "E": "Kartini was born in 1900."
+    },
+    "answers": [
+      "A",
+      "B",
+      "D"
+    ],
+    "explanation": "Pernyataan yang benar: lahir di keluarga bangsawan (A), membuka sekolah untuk anak perempuan (B), dan surat-suratnya dibukukan pada 1911 setelah beliau wafat pada 1904 (D). Opsi C salah (wafat usia 25) dan opsi E salah (lahir 1879)."
+  },
+
+  {
+    "id": "p2_20",
+    "pkg": "pilihan2",
+    "passageKey": "p2_museum_trip",
+    "label": "Pilihan 2 • No. 20 (Museum Trip Email)",
+    "kompetensi": "Pemahaman Tekstual - Perlengkapan Kegiatan Siswa",
+    "type": "mcqk",
+    "difficulty": "mudah",
+    "question": "What do the students have to bring on the trip?\\n(There is more than one correct answer. Click on the blank space on the left side of every correct answer!)",
+    "options": {
+      "A": "A notebook",
+      "B": "A swimsuit",
+      "C": "A packed lunch",
+      "D": "A camera",
+      "E": "A water bottle"
+    },
+    "answers": [
+      "A",
+      "C",
+      "E"
+    ],
+    "explanation": "Teks surat guru menyatakan: 'bring a notebook, a packed lunch, and a water bottle' (A, C, E)."
+  },
+
+  {
+    "id": "p2_21",
+    "pkg": "pilihan2",
+    "passageKey": "p2_museum_trip",
+    "label": "Pilihan 2 • No. 21 (Museum Trip Email)",
+    "kompetensi": "Pemahaman Tekstual - Cakupan Biaya Kegiatan",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "What does the trip fee cover?",
+    "options": {
+      "A": "Lunch and souvenirs",
+      "B": "A new uniform",
+      "C": "Museum books",
+      "D": "Transportation and the museum ticket",
+      "E": "A camera"
+    },
+    "answer": "D",
+    "explanation": "Teks menyatakan biaya Rp75.000 mencakup: 'covers transportation and the museum ticket'."
+  },
+
+  {
+    "id": "p2_22",
+    "pkg": "pilihan2",
+    "passageKey": "p2_museum_trip",
+    "label": "Pilihan 2 • No. 22 (Museum Trip Email)",
+    "kompetensi": "Pemahaman Tekstual - Ketentuan dan Konsekuensi",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "What will happen to students who do not return the permission slip?",
+    "options": {
+      "A": "They will get extra homework.",
+      "B": "They will not be allowed to join the trip.",
+      "C": "They will pay double.",
+      "D": "They will go separately.",
+      "E": "They will wear a different uniform."
+    },
+    "answer": "B",
+    "explanation": "Teks menyatakan: 'Students who do not submit the slip will not be allowed to join the trip.'"
+  },
+
+  {
+    "id": "p2_23",
+    "pkg": "pilihan2",
+    "passageKey": "p2_homework",
+    "label": "Pilihan 2 • No. 23 (Homework Debate)",
+    "kompetensi": "Pemahaman Inferensial - Gagasan Pokok Teks Diskusi",
+    "type": "mcq",
+    "difficulty": "sedang",
+    "question": "What is the main topic of the text?",
+    "options": {
+      "A": "School uniforms",
+      "B": "Teachers' stress",
+      "C": "The debate about homework",
+      "D": "Reducing school fees",
+      "E": "How to find a hobby"
+    },
+    "answer": "C",
+    "explanation": "Teks membahas perdebatan mengenai manfaat dan kerugian pemberian pekerjaan rumah (PR) bagi siswa ('The debate about homework')."
+  },
+
+  {
+    "id": "p2_24",
+    "pkg": "pilihan2",
+    "passageKey": "p2_homework",
+    "label": "Pilihan 2 • No. 24 (Homework Debate)",
+    "kompetensi": "Pemahaman Tekstual - Argumen Pendukung PR",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "According to the supporters, which skills does homework help develop?",
+    "options": {
+      "A": "Painting",
+      "B": "Swimming",
+      "C": "Cooking",
+      "D": "Singing",
+      "E": "Discipline and independent study"
+    },
+    "answer": "E",
+    "explanation": "Paragraf kedua menyebutkan pendukung meyakini PR membantu siswa melatih disiplin dan belajar secara mandiri ('develop discipline... study independently')."
+  },
+
+  {
+    "id": "p2_25",
+    "pkg": "pilihan2",
+    "passageKey": "p2_homework",
+    "label": "Pilihan 2 • No. 25 (Homework Debate)",
+    "kompetensi": "Pemahaman Tekstual - Makna Kosakata Penilaian",
+    "type": "mcq",
+    "difficulty": "sedang",
+    "question": "The word 'meaningful' in paragraph 4 is closest in meaning to ....",
+    "options": {
+      "A": "very long",
+      "B": "useful and purposeful",
+      "C": "boring",
+      "D": "difficult",
+      "E": "funny"
+    },
+    "answer": "B",
+    "explanation": "Kata 'meaningful' berarti bermakna, berbobot, dan bermanfaat ('useful and purposeful')."
+  },
+
+  {
+    "id": "p2_26",
+    "pkg": "pilihan2",
+    "passageKey": "p2_homework",
+    "label": "Pilihan 2 • No. 26 (Homework Debate)",
+    "kompetensi": "Evaluasi dan Apresiasi - Validasi Argumen dan Solusi",
+    "type": "tf",
+    "difficulty": "sedang",
+    "col1": "YES",
+    "col2": "NO",
+    "question": "Based on the text, decide whether each statement is YES or NO.",
+    "statements": [
+      {
+        "text": "Critics say too much homework can cause stress.",
+        "answer": "YES",
+        "explanation": "Sesuai paragraf 3: 'Critics argue that too much homework causes stress'."
+      },
+      {
+        "text": "All studies show that long homework hours improve grades.",
+        "answer": "NO",
+        "explanation": "Teks menyebutkan: 'Several studies suggest that long homework hours do not always lead to better grades'."
+      },
+      {
+        "text": "The writer suggests short, meaningful tasks.",
+        "answer": "YES",
+        "explanation": "Sesuai paragraf penutup: 'A balanced approach may work best: short, meaningful tasks that clearly connect with what was taught in class'."
+      }
+    ]
+  },
+
+  {
+    "id": "p2_27",
+    "pkg": "pilihan2",
+    "passageKey": "p2_rainbow",
+    "label": "Pilihan 2 • No. 27 (How a Rainbow Forms)",
+    "kompetensi": "Pemahaman Tekstual - Topik Utama Teks Fenomena Sains",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "What is the text about?",
+    "options": {
+      "A": "Why the sun is hot",
+      "B": "How clouds move",
+      "C": "Why night is dark",
+      "D": "How a rainbow is formed",
+      "E": "How rain falls"
+    },
+    "answer": "D",
+    "explanation": "Teks memaparkan proses pembentukan pelangi melalui pembiasan dan pemantulan cahaya pada tetes hujan ('How a rainbow is formed')."
+  },
+
+  {
+    "id": "p2_28",
+    "pkg": "pilihan2",
+    "passageKey": "p2_rainbow",
+    "label": "Pilihan 2 • No. 28 (How a Rainbow Forms)",
+    "kompetensi": "Pemahaman Tekstual - Proses Pembiasan Cahaya",
+    "type": "mcq",
+    "difficulty": "mudah",
+    "question": "What happens to sunlight after it enters a raindrop?",
+    "options": {
+      "A": "It slows down and bends.",
+      "B": "It stops completely.",
+      "C": "It turns black.",
+      "D": "It disappears.",
+      "E": "It speeds up."
+    },
+    "answer": "A",
+    "explanation": "Paragraf pertama menyatakan: 'When sunlight enters a raindrop, it slows down and bends.'"
+  },
+
+  {
+    "id": "p2_29",
+    "pkg": "pilihan2",
+    "passageKey": "p2_rainbow",
+    "label": "Pilihan 2 • No. 29 (How a Rainbow Forms)",
+    "kompetensi": "Pemahaman Tekstual - Sebab Perbedaan Spektrum Warna",
+    "type": "mcq",
+    "difficulty": "sedang",
+    "question": "Why do we see different colors in a rainbow?",
+    "options": {
+      "A": "Raindrops are painted.",
+      "B": "The sun changes color.",
+      "C": "Each color of light bends by a slightly different amount.",
+      "D": "Clouds filter the light.",
+      "E": "The sky is very high."
+    },
+    "answer": "C",
+    "explanation": "Teks menyatakan: 'Because each color of light bends by a slightly different amount, white sunlight spreads out into a band of colors'."
+  },
+
+  {
+    "id": "p2_30",
+    "pkg": "pilihan2",
+    "passageKey": "p2_rainbow",
+    "label": "Pilihan 2 • No. 30 (How a Rainbow Forms)",
+    "kompetensi": "Pemahaman Tekstual - Posisi Pengamat untuk Melihat Pelangi",
+    "type": "mcq",
+    "difficulty": "sedang",
+    "question": "According to the text, where must you be to see a rainbow?",
+    "options": {
+      "A": "Inside a house",
+      "B": "With the sun in front of you and rain behind you",
+      "C": "Under the rain",
+      "D": "Far away from the sun",
+      "E": "With the sun behind you and rain in front of you"
+    },
+    "answer": "E",
+    "explanation": "Paragraf kedua menyebutkan: 'To see a rainbow, the sun must be behind you and the rain in front of you.'"
+  },
+];
+
+// ======================== STATE APLIKASI ========================
+let selectedPkg = "utama";
+let selectedTypeFilter = "all";
+let selectedDifficultyFilter = "all";
+let selectedDurationMinutes = 45;
+let activeQuestions = [];
+let userAnswers = {};
+let timerInterval = null;
+let remainingSeconds = 0;
+let elapsedSeconds = 0;
+let isExamFinished = false;
+
+function selectPackage(pkgKey) {
+  selectedPkg = pkgKey;
+  document.querySelectorAll(".pkg-card").forEach(el => el.classList.remove("selected"));
+  document.getElementById("pkg-" + pkgKey).classList.add("selected");
+
+  if (pkgKey === "semua") {
+    setDuration(90);
+  } else {
+    setDuration(45);
+  }
+}
+
+function setQuestionTypeFilter(typeKey, btnEl) {
+  selectedTypeFilter = typeKey;
+  document.querySelectorAll("#type-options .time-btn").forEach(b => b.classList.remove("active"));
+  if (btnEl) btnEl.classList.add("active");
+}
+
+function setDifficultyFilter(diffKey, btnEl) {
+  selectedDifficultyFilter = diffKey;
+  document.querySelectorAll("#diff-options .time-btn").forEach(b => b.classList.remove("active"));
+  if (btnEl) btnEl.classList.add("active");
+}
+
+function setDuration(mins) {
+  selectedDurationMinutes = mins;
+  document.querySelectorAll("#time-options .time-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.textContent.startsWith(mins + " "));
+  });
+}
+
+function startExam() {
+  let pool = selectedPkg === "semua"
+    ? [...allQuestions]
+    : allQuestions.filter(q => q.pkg === selectedPkg);
+
+  if (selectedTypeFilter !== "all") {
+    pool = pool.filter(q => q.type === selectedTypeFilter);
+  }
+
+  if (selectedDifficultyFilter !== "all") {
+    pool = pool.filter(q => q.difficulty === selectedDifficultyFilter);
+  }
+
+  if (pool.length === 0) {
+    alert("Tidak ditemukan soal dengan kombinasi paket, bentuk, dan tingkat kesulitan yang dipilih. Silakan pilih opsi atau tingkat kesulitan lainnya.");
+    return;
+  }
+
+  activeQuestions = pool;
+
+  userAnswers = {};
+  isExamFinished = false;
+  remainingSeconds = selectedDurationMinutes * 60;
+  elapsedSeconds = 0;
+
+  document.getElementById("lobby-screen").classList.add("hidden");
+  document.getElementById("result-screen").classList.add("hidden");
+  document.getElementById("quiz-screen").classList.remove("hidden");
+  document.getElementById("exam-controls").classList.remove("hidden");
+  document.getElementById("bottom-finish-bar").classList.remove("hidden");
+
+  renderQuestions();
+  updateProgressUI();
+  startTimer();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function backToLobby() {
+  if (!isExamFinished && Object.keys(userAnswers).length > 0) {
+    if (!confirm("Yakin ingin keluar ke menu pemilihan paket? Progres ujian saat ini akan direset.")) {
+      return;
+    }
+  }
+  stopTimer();
+  document.getElementById("lobby-screen").classList.remove("hidden");
+  document.getElementById("result-screen").classList.add("hidden");
+  document.getElementById("quiz-screen").classList.add("hidden");
+  document.getElementById("exam-controls").classList.add("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function startTimer() {
+  stopTimer();
+  updateTimerUI();
+  timerInterval = setInterval(() => {
+    remainingSeconds--;
+    elapsedSeconds++;
+    updateTimerUI();
+    if (remainingSeconds <= 0) {
+      stopTimer();
+      finishExam(true);
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+}
+
+function formatTime(sec) {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+}
+
+function updateTimerUI() {
+  const el = document.getElementById("timer-display");
+  el.textContent = "⏱️ " + formatTime(Math.max(0, remainingSeconds));
+  el.classList.remove("warn", "danger");
+  if (remainingSeconds <= 60) {
+    el.classList.add("danger");
+  } else if (remainingSeconds <= 300) {
+    el.classList.add("warn");
+  }
+}
+
+function isQuestionComplete(q) {
+  const ans = userAnswers[q.id];
+  if (!ans) return false;
+  if (q.type === "mcq") return Boolean(ans.selected);
+  if (q.type === "mcqk") return Boolean(ans.locked);
+  if (q.type === "tf") return Object.keys(ans).length === q.statements.length;
+  return false;
+}
+
+function isQuestionCorrect(q) {
+  const ans = userAnswers[q.id];
+  if (!ans) return false;
+  if (q.type === "mcq") return ans.selected === q.answer;
+  if (q.type === "mcqk") {
+    if (!ans.locked) return false;
+    const s = [...ans.selected].sort().join(",");
+    const k = [...q.answers].sort().join(",");
+    return s === k;
+  }
+  if (q.type === "tf") {
+    if (Object.keys(ans).length !== q.statements.length) return false;
+    return q.statements.every((st, idx) => ans[idx] === st.answer);
+  }
+  return false;
+}
+
+function updateProgressUI() {
+  let done = 0;
+  activeQuestions.forEach(q => {
+    if (isQuestionComplete(q)) done++;
+  });
+  document.getElementById("progress-display").textContent = `Terjawab: ${done} / ${activeQuestions.length}`;
+}
+
+function renderQuestions() {
+  const container = document.getElementById("quiz-list");
+  container.innerHTML = "";
+
+  activeQuestions.forEach((q, idx) => {
+    const card = document.createElement("div");
+    card.className = "question-card";
+    card.id = "card-" + q.id;
+
+    const passageObj = passages[q.passageKey];
+    let typeLabel = "Multiple Choice (1 Answer)";
+    if (q.type === "mcqk") typeLabel = `MCMA (Pilih ${q.answers.length} Jawaban)`;
+    if (q.type === "tf") typeLabel = `Tabel Kategori (${q.col1 || 'YES'} / ${q.col2 || 'NO'})`;
+
+    let interactionHTML = "";
+
+    // 1. PILIHAN GANDA BIASA (MCQ)
+    if (q.type === "mcq") {
+      const saved = userAnswers[q.id];
+      let optsHTML = "";
+      for (const [key, val] of Object.entries(q.options)) {
+        let btnClass = "option-btn";
+        let dis = "";
+        if (saved && saved.selected) {
+          dis = "disabled";
+          if (key === q.answer) btnClass += " correct";
+          else if (key === saved.selected && saved.selected !== q.answer) btnClass += " wrong";
+        }
+        optsHTML += `
+          <button class="${btnClass}" ${dis} onclick="handleMCQ('${q.id}', '${key}')">
+            <strong>${key}.</strong> <span>${val}</span>
+          </button>
+        `;
+      }
+
+      let expClass = "explanation-box";
+      let expContent = "";
+      if (saved && saved.selected) {
+        const right = saved.selected === q.answer;
+        expClass += right ? " show-correct" : " show-wrong";
+        expContent = right
+          ? `<span class="status-header">✅ Jawaban Anda Benar! (${q.answer})</span><strong>Pembahasan:</strong><br>${q.explanation}`
+          : `<span class="status-header">❌ Jawaban Kurang Tepat!</span>Jawaban Anda: <strong>${saved.selected}</strong> | Kunci Jawaban: <strong>${q.answer}</strong><br><br><strong>Pembahasan:</strong><br>${q.explanation}`;
+      }
+
+      interactionHTML = `
+        <div class="options-list">${optsHTML}</div>
+        <div class="${expClass}">${expContent}</div>
+      `;
+    }
+
+    // 2. PILIHAN GANDA KOMPLEKS / MCMA
+    else if (q.type === "mcqk") {
+      const saved = userAnswers[q.id] || { selected: [], locked: false };
+      const reqCount = q.answers.length;
+      let optsHTML = "";
+      for (const [key, val] of Object.entries(q.options)) {
+        let btnClass = "option-btn";
+        let dis = "";
+        const isChosen = saved.selected.includes(key);
+        const isKey = q.answers.includes(key);
+
+        if (saved.locked) {
+          dis = "disabled";
+          if (isKey) btnClass += " correct";
+          else if (isChosen && !isKey) btnClass += " wrong";
+        } else if (isChosen) {
+          btnClass += " selected-pending";
+        }
+
+        const checkIcon = isChosen ? "☑️" : "⬜";
+        optsHTML += `
+          <button class="${btnClass}" ${dis} onclick="handleMCQK('${q.id}', '${key}', ${reqCount})">
+            <span>${checkIcon} <strong>${key}.</strong></span> <span>${val}</span>
+          </button>
+        `;
+      }
+
+      let expClass = "explanation-box";
+      let expContent = "";
+      if (saved.locked) {
+        const right = isQuestionCorrect(q);
+        expClass += right ? " show-correct" : " show-wrong";
+        expContent = right
+          ? `<span class="status-header">✅ Semua Pilihan Anda Benar! (${q.answers.join(", ")})</span><strong>Pembahasan:</strong><br>${q.explanation}`
+          : `<span class="status-header">❌ Pilihan Kurang Tepat!</span>Pilihan Anda: <strong>${saved.selected.join(", ")}</strong> | Kunci Jawaban: <strong>${q.answers.join(", ")}</strong><br><br><strong>Pembahasan:</strong><br>${q.explanation}`;
+      }
+
+      interactionHTML = `
+        <div style="font-size:0.84rem; color:var(--primary); font-weight:600; margin-bottom:8px;">
+          💡 Ketuk ${reqCount} pilihan jawaban yang benar. Begitu ${reqCount} opsi dipilih, kunci jawaban & pembahasan langsung muncul!
+        </div>
+        <div class="options-list">${optsHTML}</div>
+        <div class="${expClass}">${expContent}</div>
+      `;
+    }
+
+    // 3. TABEL KATEGORI / YES-NO (TF)
+    else if (q.type === "tf") {
+      const savedTF = userAnswers[q.id] || {};
+      const col1 = q.col1 || "YES";
+      const col2 = q.col2 || "NO";
+      let rowsHTML = "";
+      q.statements.forEach((st, sIdx) => {
+        const chosen = savedTF[sIdx];
+        let btn1 = "tf-btn";
+        let btn2 = "tf-btn";
+        let dis = "";
+        let rowExp = "";
+
+        if (chosen) {
+          dis = "disabled";
+          if (st.answer === col1) {
+            btn1 += " correct";
+            if (chosen === col2) btn2 += " wrong";
+          } else {
+            btn2 += " correct";
+            if (chosen === col1) btn1 += " wrong";
+          }
+          const isRight = chosen === st.answer;
+          rowExp = `<div style="margin-top:8px; padding:8px 10px; border-radius:6px; background:${isRight ? '#dcfce7' : '#fee2e2'}; color:${isRight ? '#14532d' : '#7f1d1d'}; font-size:0.86rem;">
+            <strong>${isRight ? '✅ Tepat!' : '❌ Kurang Tepat!'} (Kunci: ${st.answer})</strong> — ${st.explanation}
+          </div>`;
+        }
+
+        const safeCol1 = col1.replace(/'/g, "\'");
+        const safeCol2 = col2.replace(/'/g, "\'");
+
+        rowsHTML += `
+          <tr>
+            <td>
+              ${st.text}
+              ${rowExp}
+            </td>
+            <td style="width:210px;">
+              <div class="tf-actions">
+                <button class="${btn1}" ${dis} onclick="handleTF('${q.id}', ${sIdx}, '${safeCol1}')">${col1}</button>
+                <button class="${btn2}" ${dis} onclick="handleTF('${q.id}', ${sIdx}, '${safeCol2}')">${col2}</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+
+      interactionHTML = `
+        <table class="tf-table">
+          <thead>
+            <tr>
+              <th>Statement / Activity</th>
+              <th>Pilihan Kategori</th>
+            </tr>
+          </thead>
+          <tbody>${rowsHTML}</tbody>
+        </table>
+      `;
+    }
+
+    let diffLabel = "🟢 Mudah";
+    let diffClass = "diff-mudah";
+    if (q.difficulty === "sedang") {
+      diffLabel = "🟡 Sedang";
+      diffClass = "diff-sedang";
+    } else if (q.difficulty === "sulit") {
+      diffLabel = "🟠 Sulit";
+      diffClass = "diff-sulit";
+    } else if (q.difficulty === "sulit-sekali") {
+      diffLabel = "🔴 Sulit Sekali";
+      diffClass = "diff-sulit-sekali";
+    }
+
+    card.innerHTML = `
+      <div class="meta-row">
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <span class="q-badge">No. ${idx + 1} • ${q.label}</span>
+          <span class="q-diff-badge ${diffClass}">${diffLabel}</span>
+        </div>
+        <span class="q-type-tag">${typeLabel}</span>
+      </div>
+      <div class="passage-box">
+        <span class="passage-title">${passageObj.title}</span>
+        ${passageObj.text}
+      </div>
+      <div class="question-text">${q.question}</div>
+      ${interactionHTML}
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+function handleMCQ(qId, key) {
+  if (isExamFinished) return;
+  userAnswers[qId] = { selected: key };
+  renderQuestions();
+  updateProgressUI();
+}
+
+function handleMCQK(qId, key, reqCount) {
+  if (isExamFinished) return;
+  if (!userAnswers[qId]) {
+    userAnswers[qId] = { selected: [], locked: false };
+  }
+  const st = userAnswers[qId];
+  if (st.locked) return;
+
+  const idx = st.selected.indexOf(key);
+  if (idx > -1) {
+    st.selected.splice(idx, 1);
+  } else {
+    st.selected.push(key);
+  }
+
+  if (st.selected.length === reqCount) {
+    st.locked = true;
+  }
+
+  renderQuestions();
+  updateProgressUI();
+}
+
+function handleTF(qId, sIdx, choice) {
+  if (isExamFinished) return;
+  if (!userAnswers[qId]) userAnswers[qId] = {};
+  userAnswers[qId][sIdx] = choice;
+  renderQuestions();
+  updateProgressUI();
+}
+
+function finishExam(autoByTimer) {
+  stopTimer();
+  isExamFinished = true;
+
+  let correct = 0;
+  let wrong = 0;
+  let unanswered = 0;
+
+  activeQuestions.forEach(q => {
+    if (!isQuestionComplete(q)) {
+      unanswered++;
+    } else if (isQuestionCorrect(q)) {
+      correct++;
+    } else {
+      wrong++;
+    }
+  });
+
+  const total = activeQuestions.length;
+  const score100 = total > 0 ? Math.round((correct / total) * 100) : 0;
+  const score1000 = total > 0 ? Math.round((correct / total) * 1000) : 0;
+
+  let predikat = "Perlu Latihan Lagi 💪";
+  if (score100 >= 85) predikat = "Sangat Baik (Istimewa) 🏆";
+  else if (score100 >= 70) predikat = "Baik (Memuaskan) 🌟";
+  else if (score100 >= 55) predikat = "Cukup (Tingkatkan Lagi) 👍";
+
+  document.getElementById("result-title").textContent = autoByTimer
+    ? "⏰ Waktu Habis! Ujian Selesai"
+    : "🎉 Simulasi TKA Selesai!";
+  document.getElementById("final-score-100").textContent = score100;
+  const diffMap = { all: "Semua Tingkat", mudah: "🟢 Tingkat Mudah", sedang: "🟡 Tingkat Sedang", sulit: "🟠 Tingkat Sulit", "sulit-sekali": "🔴 Tingkat Sulit Sekali" };
+  document.getElementById("result-subtitle").textContent = `Evaluasi hasil simulasi TKA Bahasa Inggris Anda (${diffMap[selectedDifficultyFilter] || "Semua Tingkat"})`;
+  document.getElementById("predikat-text").textContent = "Predikat: " + predikat;
+  document.getElementById("skor-tka-text").textContent = `Skor Setara TKA: ${score1000} / 1000`;
+  document.getElementById("stat-correct").textContent = correct;
+  document.getElementById("stat-wrong").textContent = wrong;
+  document.getElementById("stat-unanswered").textContent = unanswered;
+  document.getElementById("stat-time").textContent = formatTime(elapsedSeconds);
+
+  document.getElementById("result-screen").classList.remove("hidden");
+  document.getElementById("bottom-finish-bar").classList.add("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function scrollToReview() {
+  const quizEl = document.getElementById("quiz-screen");
+  quizEl.scrollIntoView({ behavior: "smooth" });
+}
+</script>
+</body>
+</html>
